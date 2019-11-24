@@ -6,21 +6,33 @@ import * as Navigation from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack"
 import {createTabNavigator} from "react-navigation-tabs";
 import Colors from "../Config/Colors";
-
-
-
+import Background from "../Images/background.png"
+import Button from "../Components/Button"
 
 
 class LandingPage extends React.Component{
     render(){
         return(
-            <RN.ImageBackground>
-                <RN.View style={{flex:1, alignItems:"center", justifyContent:"center"}}>
-                    <RN.Text>Landing Page</RN.Text>
-                    <RN.Button title="Go Login" onPress={() => this.props.navigation.navigate("Login")}/>
+            <RN.ImageBackground source={require('../Images/background.png')} style={{width:'100%', height:'100%'}}>
+                <RN.View style={{flex:5}}/>
+                <RN.View style={{flex:4, alignItems:"center", justifyContent:"center"}}>
+                    <RN.Text style={{color:'#fcfcfc', fontSize:36, fontWeight:'bold', textAlign:'center', width:'80%'}}>Welcome to OFA</RN.Text>
+                    <RN.Text style={{color:"#dedede", fontSize:14, textAlign:'center', width:'75%', margin:10}}>The best way to arrange matches and finding opponents</RN.Text>
+                    <Button title="LOGIN" onPress={() => this.props.navigation.navigate("Login")} containerStyle={{height:45, marginBottom:10}}/>
                 </RN.View>
-            </RN.ImageBackground>
-            
+                <RN.View style={{flex:3, alignItems:"center", justifyContent:"center", opacity:0.9}}>
+                    <RN.Text style={{color:"#dedede", fontSize:14, textAlign:'center', width:'75%', margin:10}}>Continue with:</RN.Text>
+                    <Button title="Sign in with Google" 
+                            onPress={() => this.props.navigation.navigate("Login")} 
+                            containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
+                            textStyle={{color:Colors.headerBackground, fontWeight:'100'}}
+                            logo1={require('../Images/googleLogo.png')}/>
+                    <Button title="Sign in with Facebook"
+                            onPress={() => this.props.navigation.navigate("Login")} 
+                            containerStyle={{height:40, marginBottom:10, backgroundColor:'#1877f2'}}
+                            logo1={require('../Images/facebookLogo.png')}/>
+                </RN.View>         
+            </RN.ImageBackground>         
         )
     }
 }
@@ -48,26 +60,31 @@ class SignUpPage extends React.Component{
     }
 }
 
-const LoginNavigator = createTabNavigator(
-    {
-        "Login": {screen:LoginPage, title:"Login"},
-        "Sign Up": {screen:SignUpPage, title:"Sign Up"}
-    }
-)
-
-const LoginComponent = Navigation.createAppContainer(LoginNavigator);
 
 const LandingNavigator = createStackNavigator(
     {
-    "Home": {screen:LandingPage, title:"Home"},
-    "Login": {screen:LoginPage},
-    "Sign Up": {screen:SignUpPage}
-    },
-    {
-        navigationOptions:{
-            headerMode:"none"
+        "Home": {
+                screen:LandingPage, 
+                title:"Home",
+                navigationOptions:{
+                    header:null
+                }
+        },
+        "Login":{
+                screen:LoginPage,
+                title:'Login',
+                navigationOptions:{
+                    header:null
+                }
+        },
+        "Sign Up":{
+                    screen:SignUpPage,
+                    title:'Sign Up',
+                    navigationOptions:{
+                        header:null
+                    }
         }
-    }
+    },
 );
 
-export default LandingPage;
+export default Navigation.createAppContainer(LandingNavigator);
