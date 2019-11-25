@@ -10,6 +10,7 @@ import Button from "../Components/Button";
 import Constants from "expo-constants";
 import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
+import TeamProfile from "./TeamProfile";
 
 
 class LandingPage extends React.Component{
@@ -78,9 +79,13 @@ class LoginPage extends React.Component{
                     </NB.Form>
                     <RN.Text style={styles.forgotPasswordStyle}>Forgot password ?</RN.Text>
                 </RN.View>
-                <RN.View style={{flex:2, alignContent:"flex-end", padding:10}}>
+                <RN.View style={{flex:2, alignContent:"flex-end", padding:10, justifyContent:'space-around'}}>
                     <Button title="LOGIN"
                         onPress={() => this.props.navigation.navigate("Profile")} 
+                        containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
+                        textStyle={{color:Colors.headerBackground}}/>
+                    <Button title="LOGIN as Team"
+                        onPress={() => this.props.navigation.navigate("Team Profile")} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>
@@ -195,21 +200,28 @@ const LandingNavigator = createStackNavigator(
                 title:"Home",
                 navigationOptions:{
                     header:null
-                }
+            }
         },
         "Login":{
                 screen:loginSignupNavigator,
                 title:'Login',
                 navigationOptions:{
                     header:null
-                }
+            }
         },
         "Profile":{
                 screen:PlayerProfile,
                 title:'Profile',
                 navigationOptions:{
                     header:null
-                }
+            }
+        },
+        "Team Profile":{
+            screen:TeamProfile,
+            title:'Team Profile',
+            navigationOptions:{
+                header:null
+            }
         }
     },
 );

@@ -3,6 +3,6 @@
   "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "fs-xc5",
+  "urlRandomness": "ig-acm",
   "https": false
 }

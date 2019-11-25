@@ -50,7 +50,7 @@ export default class MatchHistory extends React.Component{
                     data={matches}
                     renderItem={({ item }) => <MatchRow match={item} />}
                     ListFooterComponent={() => <RN.Text style={{fontSize:12, color:'#ccc', textAlign:'center', padding:height*0.05}}>No more matches</RN.Text>}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                 />
             </RN.View>
         )

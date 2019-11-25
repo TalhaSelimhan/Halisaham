@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Colors from "./Config/Colors"
 import LoginPage from "./Pages/LoginPage"
 import PlayerProfile from "./Pages/PlayerProfile";
+import TeamProfile from './Pages/TeamProfile';
 
 export default function App() {
   return (

@@ -54,7 +54,7 @@ export default class PlayerTeams extends React.Component{
                     renderItem={({ item }) => <TeamRow team={item} />}
                     ListFooterComponent={() => <RN.Text style={{fontSize:12, color:'#ccc', textAlign:'center', padding:height*0.05}}>No more teams</RN.Text>}
                     ListHeaderComponent={() => <TeamHeader/>}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                 />
             </RN.View>
         )
