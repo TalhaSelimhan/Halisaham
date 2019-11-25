@@ -10,59 +10,29 @@ const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
 const height = Window.height;
 const width = Window.width;
-
-
-
-
+import MatchHistory from './MatchHistory';
+import PlayerTeams from './PlayerTeams';
 
 class PlayerProfile extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            show:1
+        }
+    }
     render(){
-        let data = [{
-            "speed": 74,
-            "balance": 29,
-            "explosives": 40,
-            "energy": 40,
-            "flexibility": 30,
-            "agility": 25,
-            "endurance": 44
-        }]
-        
-        let options = {
-        width: 290,
-        height: 290,
-        margin: {
-            top: 20,
-            left: 20,
-            right: 30,
-            bottom: 20
-        },
-        r: 150,
-        max: 100,
-        fill: "#2980B9",
-        stroke: "#2980B9",
-        animate: {
-            type: 'oneByOne',
-            duration: 200
-        },
-        label: {
-            fontFamily: 'Arial',
-            fontSize: 14,
-            fontWeight: true,
-            fill: '#34495E'
-        }
-        }
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:'https://pmcwwd.files.wordpress.com/2019/09/jlo-versace-dress-versace-show-spring-2020-1.jpg'}}
+                    <RN.Image source={{uri:'https://i.hizliresim.com/1pljQA.jpg'}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
                         <RN.View style={{width:width*0.70, alignItems:'flex-start', justifyContent:'center'}}>
-                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>mfsilay</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Muhammed Furkan, 20</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Sariyer, Istanbul</RN.Text>
+                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>koulibaly28</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Kalidou Koulibaly, 28</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Naples, Italy</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.20, justifyContent:'space-around'}}>
                             <Button title="EDIT"
@@ -74,21 +44,21 @@ class PlayerProfile extends React.Component{
                         </RN.View>
                     </RN.View>
                     <RN.View style={styles.secondSection}>
-                        <RN.TouchableOpacity style={styles.secondSectionButtons}>
+                        <RN.TouchableOpacity style={styles.secondSectionButtons} onPress={() => this.setState({show:1})}>
                             <NB.Icon name="ios-stats" type="Ionicons" style={styles.secondSectionIcon}/>
                             <RN.Text style={styles.secondSectionText}>Stats</RN.Text>
                         </RN.TouchableOpacity>
                         <RN.TouchableOpacity style={styles.secondSectionButtons}>
-                            <NB.Icon name="history" type="FontAwesome5" style={styles.secondSectionIcon}/>
+                            <NB.Icon name="history" type="FontAwesome5" style={styles.secondSectionIcon} onPress={() => this.setState({show:2})}/>
                             <RN.Text style={styles.secondSectionText}>Match History</RN.Text>
                         </RN.TouchableOpacity>
-                        <RN.TouchableOpacity style={styles.secondSectionButtons}>
+                        <RN.TouchableOpacity style={styles.secondSectionButtons} onPress={() => this.setState({show:3})}>
                             <NB.Icon name="people" type="MaterialIcons" style={styles.secondSectionIcon}/>
                             <RN.Text style={styles.secondSectionText}>Teams</RN.Text>
                         </RN.TouchableOpacity>
                     </RN.View>
                     <RN.View style={styles.thirdSection}>
-                        
+                        {this.state.show == 3 ? <PlayerTeams/> : this.state.show == 2 ? <MatchHistory/> : <RN.Text style={{textAlign:'center', color:'#fff', padding:height*.05}}>Nothing to see here</RN.Text>}
                     </RN.View>
 
                 </RN.View>
@@ -96,6 +66,8 @@ class PlayerProfile extends React.Component{
         )
     }
 }
+
+
 
 
 
@@ -171,7 +143,8 @@ const styles = RN.StyleSheet.create({
         marginHorizontal:width*.05,
         backgroundColor:Colors.postBackground, 
         elevation:5, 
-        borderRadius:45
+        borderRadius:45,
+        overflow:'hidden'
     }
 })
 

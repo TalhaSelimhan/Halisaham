@@ -1,9 +1,9 @@
 {
-  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 10628,
-  "expoServerNgrokUrl": "https://rh-ek4.furkan172.halisaham.exp.direct",
-  "packagerNgrokUrl": "https://packager.rh-ek4.furkan172.halisaham.exp.direct",
-  "ngrokPid": 1492
+  "packagerPid": 6940,
+  "expoServerNgrokUrl": "https://fs-xc5.hbt19031.halisaham.exp.direct",
+  "packagerNgrokUrl": "https://packager.fs-xc5.hbt19031.halisaham.exp.direct",
+  "ngrokPid": 11512,
+  "devToolsPort": 19002
 }
