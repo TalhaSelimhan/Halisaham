@@ -55,39 +55,39 @@ class PlayerProfile extends React.Component{
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
                     <RN.Image source={{uri:'https://pmcwwd.files.wordpress.com/2019/09/jlo-versace-dress-versace-show-spring-2020-1.jpg'}}
-                              style={{width:width, height:height*0.45, resizeMode:'contain', top:-10, left:0, right:0, position:"absolute"}}/>
+                              style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
                 </RN.View>
                 <RN.View style={styles.infoView}>
-                    <RN.View style={{flex:1.5, flexDirection:'row', alignContent:'center'}}>
-                        <RN.View style={{flex:2, alignItems:'flex-start', paddingHorizontal:20, justifyContent:'center'}}>
-                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>Muhammed Furkan</RN.Text>
+                    <RN.View style={styles.firstSection}>
+                        <RN.View style={{width:width*0.70, alignItems:'flex-start', justifyContent:'center'}}>
+                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>mfsilay</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Muhammed Furkan, 20</RN.Text>
                             <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Sariyer, Istanbul</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>20 years</RN.Text>
                         </RN.View>
-                        <RN.View style={{flex:1, justifyContent:'space-evenly', alignItems:'center'}}>
+                        <RN.View style={{width:width*0.20, justifyContent:'space-around'}}>
                             <Button title="EDIT"
-                                    containerStyle={{backgroundColor:'#fff', width:width/3 - 50, height:25}}
+                                    containerStyle={{backgroundColor:'#fff', width:width*0.20, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
-                            <Button title="MANAGE TEAMS"
-                                    containerStyle={{backgroundColor:Colors.squadButton, width:width/3 - 50, height:25}}
-                                    textStyle={{color:'#fff', fontSize:8, fontWeight:'600'}}/>
+                            <Button title="INVITE"
+                                    containerStyle={{backgroundColor:Colors.squadButton, width:width*0.20, height:height*0.04}}
+                                    textStyle={{color:'#fff', fontSize:10, fontWeight:'600'}}/>
                         </RN.View>
                     </RN.View>
-                    <RN.View style={{flex:1.2, backgroundColor:'#fff', elevation:5, marginHorizontal:'5%', marginVertical:5, borderRadius:15, flexDirection:"row"}}>
-                        <RN.TouchableOpacity style={{flex:1, alignItems:"center", justifyContent:'center'}}>
-                            <NB.Icon name="history" type="FontAwesome5" style={{fontSize:16}}/>
-                            <RN.Text style={{fontSize:12, color:'#999', fontWeight:'200'}}>Match History</RN.Text>
+                    <RN.View style={styles.secondSection}>
+                        <RN.TouchableOpacity style={styles.secondSectionButtons}>
+                            <NB.Icon name="ios-stats" type="Ionicons" style={styles.secondSectionIcon}/>
+                            <RN.Text style={styles.secondSectionText}>Stats</RN.Text>
                         </RN.TouchableOpacity>
-                        <RN.TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                            <NB.Icon name="people" type="MaterialIcons" style={{fontSize:16}}/>
-                            <RN.Text style={{fontSize:12, color:'#999', fontWeight:'200'}}>Teams</RN.Text>
+                        <RN.TouchableOpacity style={styles.secondSectionButtons}>
+                            <NB.Icon name="history" type="FontAwesome5" style={styles.secondSectionIcon}/>
+                            <RN.Text style={styles.secondSectionText}>Match History</RN.Text>
                         </RN.TouchableOpacity>
-                        <RN.TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                            <NB.Icon name="location-on" type="MaterialIcons" style={{fontSize:16}}/>
-                            <RN.Text style={{fontSize:12, color:'#999', fontWeight:'200'}}>Location</RN.Text>
+                        <RN.TouchableOpacity style={styles.secondSectionButtons}>
+                            <NB.Icon name="people" type="MaterialIcons" style={styles.secondSectionIcon}/>
+                            <RN.Text style={styles.secondSectionText}>Teams</RN.Text>
                         </RN.TouchableOpacity>
                     </RN.View>
-                    <RN.View style={{flex:4.8, backgroundColor:Colors.postBackground, elevation:5, borderRadius:65, marginHorizontal:'5%', marginTop:'3%', marginBottom:'10%'}}>
+                    <RN.View style={styles.thirdSection}>
                         
                     </RN.View>
 
@@ -101,14 +101,16 @@ class PlayerProfile extends React.Component{
 
 const styles = RN.StyleSheet.create({
     imageView:{
-        zIndex:-1, 
-        backgroundColor:"#eee", 
+        zIndex:-1,
         left:0, 
         right:0, 
         bottom:height*0.55,
         top:0,
+        padding:0,
+        margin:0,
         width:'100%', 
-        height:height*0.45
+        height:height*0.45,
+        elevation:0
     },
     infoView:{
         zIndex:1, 
@@ -118,7 +120,8 @@ const styles = RN.StyleSheet.create({
             height:-2,
             width:0
         },
-        paddingTop:10,
+        alignContent:'center',
+        justifyContent:'space-around',
         shadowOpacity:0.7,
         shadowRadius:5,
         backgroundColor:Colors.backgroundGreen,
@@ -130,7 +133,45 @@ const styles = RN.StyleSheet.create({
         top:-height*0.1, 
         width:'100%', 
         height:height*0.65, 
-        alignSelf:'flex-end'
+    },
+    firstSection:{
+        height:height*0.12, 
+        width:width*.9, 
+        flexDirection:'row', 
+        alignContent:'center', 
+        justifyContent:'space-between', 
+        marginHorizontal:width*0.05
+    },
+    secondSection:{
+        height:height*0.1, 
+        width:width*.9, 
+        backgroundColor:'#fff', 
+        elevation:5, 
+        borderRadius:10, 
+        flexDirection:"row", 
+        marginHorizontal:width*0.05, 
+        justifyContent:'space-between'
+    },
+    secondSectionButtons:{
+        width:width*0.3, 
+        alignItems:'center', 
+        justifyContent:'center'
+    },
+    secondSectionIcon:{
+        fontSize:20
+    },
+    secondSectionText:{
+        fontSize:12, 
+        color:'#999', 
+        fontWeight:'200'
+    },
+    thirdSection:{
+        height:height*0.38,
+        width:width*.9,
+        marginHorizontal:width*.05,
+        backgroundColor:Colors.postBackground, 
+        elevation:5, 
+        borderRadius:45
     }
 })
 
