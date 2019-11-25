@@ -1,0 +1,61 @@
+{
+  "name": "react-native-pathjs-charts",
+  "version": "0.0.34",
+  "description": "Cross platform React Native charting library based on path-js and react-native-svg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capitalone/react-native-pathjs-charts"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh",
+    "lint": "eslint --ext .js,.jsx src",
+    "test": "jest"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-svg",
+    "paths-js",
+    "react-pathjs-chart",
+    "ios",
+    "android"
+  ],
+  "author": {
+    "name": "Cale Hoopes",
+    "email": "caledh@gmail.com",
+    "url": "https://github.com/capitalone"
+  },
+  "license": "Apache-2.0",
+  "maintainers": [
+    {
+      "name": "marzolfb",
+      "email": "marzolfb@gmail.com"
+    },
+    {
+      "name": "katscott",
+      "email": "reineskat@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "lodash": "^4.12.0",
+    "paths-js": "^0.4.5",
+    "react-native-svg": "~5.5.1"
+  },
+  "devDependencies": {
+    "babel-jest": "*",
+    "babel-preset-react-native": "^1.9.0",
+    "diff": "^3.1.0",
+    "jest": "*",
+    "jest-react-native": "*",
+    "react": "16.0.0",
+    "react-dom": "16.0.0",
+    "react-native": "0.50.3",
+    "react-test-renderer": "16.0.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example"
+    ]
+  }
+}

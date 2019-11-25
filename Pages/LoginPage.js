@@ -9,6 +9,7 @@ import Colors from "../Config/Colors";
 import Button from "../Components/Button";
 import Constants from "expo-constants";
 import now from "performance-now";
+import PlayerProfile from "./PlayerProfile";
 
 
 class LandingPage extends React.Component{
@@ -79,7 +80,7 @@ class LoginPage extends React.Component{
                 </RN.View>
                 <RN.View style={{flex:2, alignContent:"flex-end", padding:10}}>
                     <Button title="LOGIN"
-                        onPress={() => this.props.navigation.navigate("Login")} 
+                        onPress={() => this.props.navigation.navigate("Profile")} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>
@@ -202,7 +203,14 @@ const LandingNavigator = createStackNavigator(
                 navigationOptions:{
                     header:null
                 }
-        }    
+        },
+        "Profile":{
+                screen:PlayerProfile,
+                title:'Profile',
+                navigationOptions:{
+                    header:null
+                }
+        }
     },
 );
 
