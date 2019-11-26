@@ -11,7 +11,11 @@ import Constants from "expo-constants";
 import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
+<<<<<<< HEAD
 import AreaInfo from "./AreaInfo";
+=======
+import CreateTeam from "./CreateTeam";
+>>>>>>> f555acc088a9293b9fa70723e90c9c7ee9cc637c
 
 
 class LandingPage extends React.Component{
@@ -172,6 +176,10 @@ class SignUpPage extends React.Component{
                         onPress={() => this.props.navigation.navigate("Login")} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
+                    <Button title="Create Team"
+                        onPress={() => this.props.navigation.navigate("Create Team")} 
+                        containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
+                        textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>
             </RN.KeyboardAvoidingView>
         )
@@ -228,9 +236,15 @@ const LandingNavigator = createStackNavigator(
                 header:null
             }
         },
+<<<<<<< HEAD
         "Area Info":{
             screen:AreaInfo,
             title:'Area Info',
+=======
+        "Create Team":{
+            screen:CreateTeam,
+            title:'Create Team',
+>>>>>>> f555acc088a9293b9fa70723e90c9c7ee9cc637c
             navigationOptions:{
                 header:null
             }
