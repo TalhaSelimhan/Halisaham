@@ -11,6 +11,7 @@ import Constants from "expo-constants";
 import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
+import CreateTeam from "./CreateTeam";
 
 
 class LandingPage extends React.Component{
@@ -167,6 +168,10 @@ class SignUpPage extends React.Component{
                         onPress={() => this.props.navigation.navigate("Login")} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
+                    <Button title="Create Team"
+                        onPress={() => this.props.navigation.navigate("Create Team")} 
+                        containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
+                        textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>
             </RN.KeyboardAvoidingView>
         )
@@ -219,6 +224,13 @@ const LandingNavigator = createStackNavigator(
         "Team Profile":{
             screen:TeamProfile,
             title:'Team Profile',
+            navigationOptions:{
+                header:null
+            }
+        },
+        "Create Team":{
+            screen:CreateTeam,
+            title:'Create Team',
             navigationOptions:{
                 header:null
             }

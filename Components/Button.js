@@ -20,7 +20,7 @@ const styles = RN.StyleSheet.create({
     container: {
       backgroundColor: Colors.backgroundGreen,
       width:'90%',
-      height:40,
+      height:45,
       padding:5,
       borderRadius:20,
       alignContent:'center',
