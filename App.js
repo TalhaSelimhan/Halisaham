@@ -5,6 +5,7 @@ import LoginPage from "./Pages/LoginPage"
 import PlayerProfile from "./Pages/PlayerProfile";
 import TeamProfile from './Pages/TeamProfile';
 import PlayerStats from './Pages/PlayerStats';
+import AreaInfo from "./Pages/AreaInfo";
 
 
 export default function App() {

@@ -83,7 +83,6 @@ export default class PlayerStats extends React.Component{
                         },
                     }}
                     style={{
-                        marginVertical: 8,
                         borderRadius: 16,
                     }}
                 />

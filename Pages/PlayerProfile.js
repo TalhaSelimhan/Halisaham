@@ -48,8 +48,8 @@ class PlayerProfile extends React.Component{
                             <NB.Icon name="ios-stats" type="Ionicons" style={styles.secondSectionIcon}/>
                             <RN.Text style={styles.secondSectionText}>Stats</RN.Text>
                         </RN.TouchableOpacity>
-                        <RN.TouchableOpacity style={styles.secondSectionButtons}>
-                            <NB.Icon name="history" type="FontAwesome5" style={styles.secondSectionIcon} onPress={() => this.setState({show:2})}/>
+                        <RN.TouchableOpacity style={styles.secondSectionButtons} onPress={() => this.setState({show:2})}>
+                            <NB.Icon name="history" type="FontAwesome5" style={styles.secondSectionIcon}/>
                             <RN.Text style={styles.secondSectionText}>Match History</RN.Text>
                         </RN.TouchableOpacity>
                         <RN.TouchableOpacity style={styles.secondSectionButtons} onPress={() => this.setState({show:3})}>

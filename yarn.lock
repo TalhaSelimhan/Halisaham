@@ -4681,7 +4681,17 @@ react-native-login-screen@^0.1.11:
   resolved "https://registry.yarnpkg.com/react-native-login-screen/-/react-native-login-screen-0.1.11.tgz#01875e8bf5f90618366cdfedd82d1d5e634ac0cf"
   integrity sha512-j2BU4B9UXxRI6kzm6nLW8p5TV7VP9y+BWRYArL8Wc+MjeHw+WesQDZojyAfrQgi0R/UYDPLFWNtEK4NK0LJl3Q==
 
-react-native-ratings@^6.3.0:
+react-native-maps@~0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.25.0.tgz#81bc51eb50e33811a9e1c345cc48869413ead67d"
+  integrity sha512-PFJuW1pt+HnnnN0m0OGk29RSvICFVkK/DScX6cUk0SuCSN2DAHx0y6y57lZyYXcYqU4J4usNpfxgp/ccjASDiw==
+
+react-native-pie@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-pie/-/react-native-pie-0.6.1.tgz#6c16d967ca37b0f54abee822a5752edd81dc51ed"
+  integrity sha512-3oT4pwuD+qIkLauavJQMR7WBPlL3N7IqruuFwg2bow80SZR4dOF65oimhzPtOrLVLIev8b99PATagbeNsfb6jw==
+
+react-native-ratings@^6.3.0, react-native-ratings@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-6.5.0.tgz#a1606ccba3c5b54eec8e6cfa4765a45cf0e4ab8d"
   integrity sha512-YMcfQ7UQCmXGEc/WPlukHSHs5yvckTwjq5fTRk1FG8gaO7fZCNygEUGPuw4Dbvvp3IlsCUn0bOQd63RYsb7NDQ==
