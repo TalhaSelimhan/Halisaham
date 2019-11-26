@@ -11,11 +11,8 @@ import Constants from "expo-constants";
 import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
-<<<<<<< HEAD
 import AreaInfo from "./AreaInfo";
-=======
 import CreateTeam from "./CreateTeam";
->>>>>>> f555acc088a9293b9fa70723e90c9c7ee9cc637c
 
 
 class LandingPage extends React.Component{
@@ -236,15 +233,16 @@ const LandingNavigator = createStackNavigator(
                 header:null
             }
         },
-<<<<<<< HEAD
         "Area Info":{
             screen:AreaInfo,
             title:'Area Info',
-=======
+            navigationOptions:{
+                header:null
+            }
+        },
         "Create Team":{
             screen:CreateTeam,
             title:'Create Team',
->>>>>>> f555acc088a9293b9fa70723e90c9c7ee9cc637c
             navigationOptions:{
                 header:null
             }
