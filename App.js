@@ -4,6 +4,8 @@ import Colors from "./Config/Colors"
 import LoginPage from "./Pages/LoginPage"
 import PlayerProfile from "./Pages/PlayerProfile";
 import TeamProfile from './Pages/TeamProfile';
+import PlayerStats from './Pages/PlayerStats';
+
 
 export default function App() {
   return (

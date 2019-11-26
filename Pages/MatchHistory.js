@@ -5,7 +5,6 @@ import * as RNE from "react-native-elements";
 import Constants from "expo-constants";
 import Colors from "../Config/Colors";
 import Button from "../Components/Button";
-import {Radar} from "react-native-pathjs-charts";
 const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
 const height = Window.height;

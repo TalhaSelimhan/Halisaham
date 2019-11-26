@@ -5,13 +5,13 @@ import * as RNE from "react-native-elements";
 import Constants from "expo-constants";
 import Colors from "../Config/Colors";
 import Button from "../Components/Button";
-import {Radar} from "react-native-pathjs-charts";
 const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
 const height = Window.height;
 const width = Window.width;
 import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
+import PlayerStats from "./PlayerStats";
 
 class PlayerProfile extends React.Component{
     constructor(props){
@@ -58,7 +58,7 @@ class PlayerProfile extends React.Component{
                         </RN.TouchableOpacity>
                     </RN.View>
                     <RN.View style={styles.thirdSection}>
-                        {this.state.show == 3 ? <PlayerTeams/> : this.state.show == 2 ? <MatchHistory/> : <RN.Text style={{textAlign:'center', color:'#fff', padding:height*.05}}>Nothing to see here</RN.Text>}
+                        {this.state.show == 3 ? <PlayerTeams/> : this.state.show == 2 ? <MatchHistory/> : <PlayerStats/>}
                     </RN.View>
 
                 </RN.View>

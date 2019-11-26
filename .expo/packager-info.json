@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 6008,
-  "expoServerNgrokUrl": "https://ig-acm.hbt19031.halisaham.exp.direct",
-  "packagerNgrokUrl": "https://packager.ig-acm.hbt19031.halisaham.exp.direct",
-  "ngrokPid": 128
+  "packagerPid": 11628,
+  "expoServerNgrokUrl": "https://r2-s9b.hbt19031.halisaham.exp.direct",
+  "packagerNgrokUrl": "https://packager.r2-s9b.hbt19031.halisaham.exp.direct",
+  "ngrokPid": 13024
 }
