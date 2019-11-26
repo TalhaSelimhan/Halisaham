@@ -6,6 +6,7 @@ import PlayerProfile from "./Pages/PlayerProfile";
 import TeamProfile from './Pages/TeamProfile';
 import PlayerStats from './Pages/PlayerStats';
 import AreaInfo from "./Pages/AreaInfo";
+import ReserveArea from "./Pages/ReserveArea";
 
 import CreateTeam from './Pages/CreateTeam';
 

@@ -16,6 +16,7 @@
     "react-dom": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-chart-kit": "^4.0.0",
+    "react-native-datepicker": "^1.7.2",
     "react-native-dynamic-vector-icons": "^0.2.1",
     "react-native-elements": "^1.2.7",
     "react-native-fusioncharts": "^4.1.1",
