@@ -12,7 +12,7 @@ import ListMatches from './Pages/ListMatches';
 
 export default function App() {
   return (
-    <ListMatches/>
+    <LoginPage/>
   );
 }
 
