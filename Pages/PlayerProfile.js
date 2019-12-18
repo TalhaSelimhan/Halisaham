@@ -2,6 +2,7 @@ import React from "react";
 import * as RN from "react-native";
 import * as NB from "native-base";
 import * as RNE from "react-native-elements";
+import Icon from "react-native-vector-icons/Feather";
 import Constants from "expo-constants";
 import Colors from "../Config/Colors";
 import Button from "../Components/Button";
@@ -12,6 +13,16 @@ const width = Window.width;
 import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
+import colors from "../Config/Colors";
+
+
+var playerdata = {
+    imageurl:'https://i.hizliresim.com/1pljQA.jpg',
+    username:'koulibaly28',
+    name:'Kalidou Koulibaly',
+    age:28,
+    location:'Naples, Italy'
+}
 
 class PlayerProfile extends React.Component{
     constructor(props){
@@ -24,23 +35,23 @@ class PlayerProfile extends React.Component{
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:'https://i.hizliresim.com/1pljQA.jpg'}}
-                              style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
+                    <RN.Image source={{uri:playerdata.imageurl}}
+                              style={styles.playerImage}/>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
-                        <RN.View style={{width:width*0.70, alignItems:'flex-start', justifyContent:'center'}}>
-                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>koulibaly28</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Kalidou Koulibaly, 28</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Naples, Italy</RN.Text>
+                        <RN.View style={styles.playerInfos}>
+                            <RN.Text style={styles.usernameText}>{playerdata.username}</RN.Text>
+                            <RN.Text style={styles.otherInfos}>{playerdata.name}, {playerdata.age}</RN.Text>
+                            <RN.Text style={styles.otherInfos}>{playerdata.location}</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.20, justifyContent:'space-around'}}>
                             <Button title="EDIT"
                                     containerStyle={{backgroundColor:'#fff', width:width*0.20, height:height*0.04}}
-                                    textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
+                                    textStyle={{color:colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <Button title="INVITE"
                                     containerStyle={{backgroundColor:Colors.squadButton, width:width*0.20, height:height*0.04}}
-                                    textStyle={{color:'#fff', fontSize:10, fontWeight:'600'}}/>
+                                    textStyle={styles.buttonText}/>
                         </RN.View>
                     </RN.View>
                     <RN.View style={styles.secondSection}>
@@ -62,6 +73,7 @@ class PlayerProfile extends React.Component{
                     </RN.View>
 
                 </RN.View>
+                
             </RN.View>
         )
     }
@@ -84,6 +96,13 @@ const styles = RN.StyleSheet.create({
         height:height*0.45,
         elevation:0
     },
+    playerImage:{
+        width:width, 
+        height:height*0.45, 
+        resizeMode:'cover', 
+        left:0, right:0, 
+        position:"absolute",        
+    },
     infoView:{
         zIndex:1, 
         elevation:3,
@@ -105,6 +124,26 @@ const styles = RN.StyleSheet.create({
         top:-height*0.1, 
         width:'100%', 
         height:height*0.65, 
+    },
+    playerInfos:{
+        width:width*0.70, 
+        alignItems:'flex-start', 
+        justifyContent:'center'
+    },
+    usernameText:{
+        fontSize:20, 
+        fontWeight:'bold', 
+        color:Colors.postBackground
+    },
+    otherInfos:{
+        fontSize:12, 
+        fontWeight:'200', 
+        color:Colors.locationBackground
+    },
+    buttonText:{
+        color:'#fff', 
+        fontSize:10, 
+        fontWeight:'600'
     },
     firstSection:{
         height:height*0.12, 
