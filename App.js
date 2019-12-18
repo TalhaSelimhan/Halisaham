@@ -9,10 +9,11 @@ import AreaInfo from "./Pages/AreaInfo";
 import ReserveArea from "./Pages/ReserveArea";
 import CreateTeam from './Pages/CreateTeam';
 import ListMatches from './Pages/ListMatches';
+import ListTeams from './Pages/ListTeams';
 
 export default function App() {
   return (
-    <ListMatches/>
+    <ListTeams/>
   );
 }
 

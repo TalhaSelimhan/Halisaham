@@ -5,28 +5,18 @@ import * as RNE from "react-native-elements";
 import Constants from "expo-constants";
 import Colors from "../Config/Colors";
 import Button from "../Components/Button";
+import Header from "../Components/Header";
 const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
 const height = Window.height;
 const width = Window.width;
-import MatchHistory from './MatchHistory';
-import PlayerTeams from './PlayerTeams';
-import PlayerStats from "./PlayerStats";
 import { black } from "ansi-colors";
 
 export default class CreateTeam extends React.Component{
     render(){
         return(
             <RN.View style={{flex:1,backgroundColor:Colors.postBackground}}>
-                <RN.View style={styles.headerFlex}>
-                    <RN.View style={{flex:1,marginTop:Constants.statusBarHeight,alignItems:"center",justifyContent:"center"}}>
-                        <NB.Icon name="chevron-left" type="Entypo" onPress={() => this.props.navigation.pop()}/>
-                    </RN.View>
-                    <RN.View style={{flex:4,marginTop:Constants.statusBarHeight,alignItems:"center",justifyContent:"center"}}>
-                        <RN.Text style={{color:"white",fontSize:24}}>Create New Team</RN.Text>
-                    </RN.View>
-                    <RN.View style={{flex:1}}/>
-                </RN.View>
+                <Header title="Create New Team" navigation={this.props.navigation}/>
                 <RN.View style={{flex:8}}>
                     <NB.Form>
                         <NB.Item floatingLabel>

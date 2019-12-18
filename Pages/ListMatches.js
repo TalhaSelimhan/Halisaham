@@ -10,17 +10,13 @@ const height = window.height;
 const statusBarHeight = Constants.statusBarHeight;
 
 
-class MatchPost extends React.Component{
+class Post extends React.Component{
     render(){
-        var {post} = this.props;
-        var labels = post.type == 0 ? ['Position'] : ['Team'];
-        var infos = post.type == 0 ? [post.position] : [post.team];
-        labels.push('Location', 'Date');
-        infos.push(post.location, post.date);
+        var {labels, post, title} = this.props;
         return(
             <RN.View style={styles.MatchPostView}>
                 <RN.View style={styles.PostHeader}>
-                    <RN.Text style={{color:'#ccc', fontSize:16, letterSpacing:2, fontWeight:'500'}}>{post.title}</RN.Text>
+                    <RN.Text style={{color:'#ccc', fontSize:16, letterSpacing:2, fontWeight:'500'}}>{title}</RN.Text>
                     <NB.Icon style={{color:'#ccc'}} name="chevron-right" type="Entypo"/>
                 </RN.View>  
                 <RN.View style={{flex:5, flexDirection:'row', alignContent:'center', alignItems:'center', padding:10}}>
@@ -28,9 +24,8 @@ class MatchPost extends React.Component{
                         {labels.map(label => <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>{label}</RN.Text>)}
                     </RN.View>
                     <RN.View style={{flex:1}}>
-                        {infos.map(info => <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{info}</RN.Text>)}
+                        {post.map(info => <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{info}</RN.Text>)}
                     </RN.View>
-                    
                 </RN.View>
             </RN.View>
         )
@@ -46,6 +41,10 @@ var post1 = {
     contact: '+90 544 444 44 44'
 }
 
+var labels = ['Position', 'Location', 'Date', 'Contact']
+var post = [post1.position, post1.location, post1.date, post1.contact]
+var title = post1.title;
+
 export default class ListMatches extends React.Component{
     render(){
         return(
@@ -54,8 +53,8 @@ export default class ListMatches extends React.Component{
                     <RN.Text style={{fontSize:24, color:'#fff', shadowColor:'black', shadowOpacity:.9, shadowOffset:{width:0, height:2}}}>Match Posts</RN.Text>
                 </RN.View>
                 <RN.ScrollView contentContainerStyle={{height:height*.7}}>
-                    <MatchPost post = {post1}/>
-                    <MatchPost post = {post1}/>
+                    <Post post = {post} labels={labels} title={title}/>
+                    <Post post = {post} labels={labels} title={title}/>
                 </RN.ScrollView>
                 
             </RN.View>
@@ -71,6 +70,7 @@ const styles = RN.StyleSheet.create({
         backgroundColor:Colors.postBackground, 
         marginVertical:5,
         overflow:'hidden',
+        borderRadius:20
     },
     PostHeader:{
         flex:3, 
