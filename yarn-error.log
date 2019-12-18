@@ -1,30 +1,30 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-native-datetimepicker
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js add expo-permission
 
 PATH: 
-  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Users\Hasan\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files (x86)\Skype\Phone\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files (x86)\IncrediBuild;C:\Users\Hasan\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Java\jdk1.8.0_201\bin;C:\Program Files (x86)\Yarn\bin\;C:\Program Files (x86)\Microsoft VS Code\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;C:\Users\Hasan\AppData\Local\Programs\Python\Python36-32\Scripts\;C:\Users\Hasan\AppData\Local\Programs\Python\Python36-32\;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Users\Hasan\AppData\Local\Microsoft\WindowsApps;;C:\Program Files (x86)\Microsoft VS Code\bin;C:\Program Files (x86)\SSH Communications Security\SSH Secure Shell;C:\Users\Hasan\AppData\Local\Yarn\binC:\Users\Ubuntu;C:\Users\Ubuntu;C:\Users\Hasan\AppData\Roaming\npm
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin
 
 Yarn version: 
-  1.13.0
+  1.21.1
 
 Node version: 
-  12.9.1
+  10.16.3
 
 Platform: 
-  win32 x64
+  darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/react-native-datetimepicker: Not found
-      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:65364:18)
-      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:129397:22)
-      at Request.emit (events.js:209:13)
-      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:130369:10)
-      at Request.emit (events.js:209:13)
-      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:130291:12)
-      at Object.onceWrapper (events.js:297:20)
-      at IncomingMessage.emit (events.js:214:15)
-      at endReadableNT (_stream_readable.js:1178:12)
-      at processTicksAndRejections (internal/process/task_queues.js:77:11)
+  Error: https://registry.yarnpkg.com/expo-permission: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:66947:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:140665:22)
+      at Request.emit (events.js:198:13)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:141637:10)
+      at Request.emit (events.js:198:13)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:141559:12)
+      at Object.onceWrapper (events.js:286:20)
+      at IncomingMessage.emit (events.js:203:15)
+      at endReadableNT (_stream_readable.js:1145:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
@@ -39,12 +39,14 @@ npm manifest:
     "dependencies": {
       "expo": "^35.0.0",
       "expo-font": "~7.0.0",
+      "expo-image-picker": "~7.0.0",
       "native-base": "^2.13.8",
       "prop-types": "^15.7.2",
       "react": "16.8.3",
       "react-dom": "16.8.3",
       "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
       "react-native-chart-kit": "^4.0.0",
+      "react-native-datepicker": "^1.7.2",
       "react-native-dynamic-vector-icons": "^0.2.1",
       "react-native-elements": "^1.2.7",
       "react-native-fusioncharts": "^4.1.1",
@@ -2304,6 +2306,11 @@ Lockfile:
     dependencies:
       fontfaceobserver "^2.1.0"
   
+  expo-image-picker@~7.0.0:
+    version "7.0.0"
+    resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-7.0.0.tgz#e4a5a52bd6f9655f75ecf3cc866aa9bb0c99e24b"
+    integrity sha512-LeGdAqbeuB2KsT369ns1kDtCGbyDCmY2gIFlf/rsD3+UmagRFX9emZLGPEnUNdCWXoctSejjFwxDnCUtpvL6yw==
+  
   expo-keep-awake@~7.0.0:
     version "7.0.0"
     resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-7.0.0.tgz#131f56bc1ed8dd66e64a159afd7eaef26939d929"
@@ -3918,6 +3925,11 @@ Lockfile:
     dependencies:
       minimist "0.0.8"
   
+  moment@^2.22.0:
+    version "2.24.0"
+    resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+    integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+  
   morgan@^1.9.0:
     version "1.9.1"
     resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
@@ -4679,6 +4691,13 @@ Lockfile:
       lodash "^4.17.13"
       paths-js "^0.4.10"
       point-in-polygon "^1.0.1"
+  
+  react-native-datepicker@^1.7.2:
+    version "1.7.2"
+    resolved "https://registry.yarnpkg.com/react-native-datepicker/-/react-native-datepicker-1.7.2.tgz#58d0822591a0ac9b32aba082650222a0ee29669d"
+    integrity sha1-WNCCJZGgrJsyq6CCZQIioO4pZp0=
+    dependencies:
+      moment "^2.22.0"
   
   react-native-drawer@2.5.1:
     version "2.5.1"
