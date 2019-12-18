@@ -7,12 +7,12 @@ import TeamProfile from './Pages/TeamProfile';
 import PlayerStats from './Pages/PlayerStats';
 import AreaInfo from "./Pages/AreaInfo";
 import ReserveArea from "./Pages/ReserveArea";
-
 import CreateTeam from './Pages/CreateTeam';
+import ListMatches from './Pages/ListMatches';
 
 export default function App() {
   return (
-    <LoginPage/>
+    <ListMatches/>
   );
 }
 
