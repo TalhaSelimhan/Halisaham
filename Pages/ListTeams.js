@@ -53,7 +53,7 @@ export default class ListTeams extends React.Component{
         return(
             <RN.View style={styles.ListMatchesView}>
                 <RN.View style={{height:height*.2, width:width, alignItems:'center', justifyContent:'center', padding:5}}>
-                    <RN.Text style={{fontSize:24, color:'#fff', shadowColor:'black', shadowOpacity:.9, shadowOffset:{width:0, height:2}, letterSpacing:2, fontWeight:'800'}}>Teams List</RN.Text>
+                    <RN.Text style={{fontSize:24, color:'#fff', elevation:4, shadowColor:'black', shadowOpacity:.9, shadowOffset:{width:0, height:2}, letterSpacing:2, fontWeight:'800'}}>Teams List</RN.Text>
                 </RN.View>
                 <RN.ScrollView contentContainerStyle={{height:height*.7}}>
                     <Item post = {post} labels={labels} title={title}/>
@@ -73,7 +73,11 @@ const styles = RN.StyleSheet.create({
         backgroundColor:Colors.postBackground, 
         marginVertical:5,
         overflow:'hidden',
-        borderRadius:20
+        borderRadius:20,
+        shadowColor:'black', 
+        shadowOpacity:.9, 
+        shadowOffset:{width:0, height:2},
+        elevation:4
     },
     PostHeader:{
         flex:3, 

@@ -10,10 +10,11 @@ import ReserveArea from "./Pages/ReserveArea";
 import CreateTeam from './Pages/CreateTeam';
 import ListMatches from './Pages/ListMatches';
 import ListTeams from './Pages/ListTeams';
+import ListFields from './Pages/ListFields';
 
 export default function App() {
   return (
-    <ListTeams/>
+    <ListFields/>
   );
 }
 
