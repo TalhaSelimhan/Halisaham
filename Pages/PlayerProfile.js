@@ -8,7 +8,7 @@ import Colors from "../Config/Colors";
 import Button from "../Components/Button";
 const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
-const height = Screen.height;
+const height = Window.height;
 const width = Window.width;
 import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';

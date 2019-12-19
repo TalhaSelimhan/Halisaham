@@ -11,27 +11,47 @@ const height = Window.height;
 const width = Window.width;
 import TeamMatchHistory from './TeamMatchHistory';
 import TeamSquad from './TeamSquad';
+import Firebase from "../Config/Firebase";
+require('firebase/firestore');
 
 class TeamProfile extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            show:1
+            show:1,
+            teamdata:{}
         }
     }
+    async loadTeam(uid){
+        let that = this;
+        let teamsRef = Firebase.firestore().collection('teams').doc(uid);
+        teamsRef.get().then(doc => {
+            if(doc.exists){
+                that.setState({teamdata:doc.data()})
+            }
+        })
+    }
+
+    async componentWillMount(){
+        await this.loadTeam(this.props.navigation.getParam('uid'));
+    }
     render(){
+        let {teamdata} = this.state;
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:'https://www.elsetge.cat/myimg/f/91-914400_soccer-s-s-c-napoli-logo-ssc-napoli.jpg'}}
+                    <RN.Image source={{uri:teamdata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
+                    <RN.TouchableOpacity onPress={this.props.navigation.openDrawer} style={{width:40, height:40, top:height*.05, left:width*.05}}>
+                        <NB.Icon name="menu" type="Feather" style={{color:'#111'}}/>
+                    </RN.TouchableOpacity>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
                         <RN.View style={{width:width*0.60, alignItems:'flex-start', justifyContent:'center'}}>
-                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>SSC Napoli</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Naples, Italy</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>2,8 km away</RN.Text>
+                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>{teamdata.name}</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>{teamdata.city}</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>{teamdata.shortname}</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.30, justifyContent:'space-around'}}>
                             <Button title="CHALLENGE"
