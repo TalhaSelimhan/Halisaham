@@ -11,6 +11,8 @@ import CreateTeam from './Pages/CreateTeam';
 import ListMatches from './Pages/ListMatches';
 import ListTeams from './Pages/ListTeams';
 import ListFields from './Pages/ListFields';
+import MatchRequest from './Pages/MatchRequest';
+import InviteMatch from './Pages/InviteMatch';
 
 export default function App() {
   return (
