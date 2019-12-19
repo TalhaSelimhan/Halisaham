@@ -13,10 +13,11 @@ import ListTeams from './Pages/ListTeams';
 import ListFields from './Pages/ListFields';
 import MatchRequest from './Pages/MatchRequest';
 import InviteMatch from './Pages/InviteMatch';
+import TabNavigator from './Pages/TabNavigator';
 
 export default function App() {
   return (
-    <LoginPage/>
+    <TabNavigator/>
   );
 }
 
