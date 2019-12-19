@@ -16,7 +16,7 @@ import InviteMatch from './Pages/InviteMatch';
 
 export default function App() {
   return (
-    <InviteMatch/>
+    <PlayerProfile/>
   );
 }
 
