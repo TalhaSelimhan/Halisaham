@@ -1,7 +1,7 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 13428,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://59-nsm.hbt19031.halisaham.exp.direct",
   "packagerNgrokUrl": "https://packager.59-nsm.hbt19031.halisaham.exp.direct",
   "ngrokPid": 9632,
