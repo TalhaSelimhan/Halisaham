@@ -13,6 +13,10 @@ import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
 import AreaInfo from "./AreaInfo";
 import CreateTeam from "./CreateTeam";
+import Firebase from "../Config/Firebase";
+require('firebase/firestore');
+const usersRef = Firebase.firestore().collection('users');
+
 
 
 class LandingPage extends React.Component{
@@ -44,6 +48,26 @@ class LandingPage extends React.Component{
 
 
 class LoginPage extends React.Component{
+    state = {
+        email:'',
+        password:'',
+    }
+    async signIn(){
+        let inputs = this.state;
+        let navigation = this.props.navigation;
+        try{
+            Firebase.auth().signInWithEmailAndPassword(inputs.email, inputs.password).then(function(user) {
+                if(!user.user.emailVerified){
+                    RN.Alert.alert('Authentication required', 'Please check and verify your email');
+                    return;
+                }
+                navigation.navigate('Profile', {uid:user.user.uid});
+                return;
+            }).catch(error => RN.Alert.alert(error.code, error.message))
+        }catch(error){
+            RN.Alert.alert(error.code, error.message);
+        }
+    }
     render(){
         return(
             <RN.KeyboardAvoidingView style={{flex:1, backgroundColor:Colors.backgroundGreen, alignContent:'center', alignItems:'center', paddingTop:Constants.statusBarHeight}}>
@@ -67,23 +91,23 @@ class LoginPage extends React.Component{
                         <NB.Item floatingLabel>
                             <NB.Label >
                                 <NB.Icon style={{fontSize:20}} name="user" type="Feather"/>
-                                <RN.Text style={styles.labelStyle}> Username</RN.Text>
+                                <RN.Text style={styles.labelStyle}> Email</RN.Text>
                             </NB.Label>
-                            <NB.Input autoCapitalize="none" autoCompleteType="username"/>
+                            <NB.Input autoCapitalize="none" autoCompleteType="username" onChangeText={text => this.setState({email:text})}/>
                         </NB.Item>
                         <NB.Item floatingLabel style={{marginBottom:20}}>
                             <NB.Label>
                                 <NB.Icon style={{fontSize:20}} name="lock" type="Entypo"/>
                                 <RN.Text style={styles.labelStyle}> Password</RN.Text>
                             </NB.Label>
-                            <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true}/>
+                            <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true} onChangeText={text => this.setState({password:text})}/>
                         </NB.Item>
                     </NB.Form>
                     <RN.Text style={styles.forgotPasswordStyle}>Forgot password ?</RN.Text>
                 </RN.View>
                 <RN.View style={{flex:2, alignContent:"flex-end", padding:10, justifyContent:'space-around'}}>
                     <Button title="LOGIN"
-                        onPress={() => this.props.navigation.navigate("Profile")} 
+                        onPress={() => this.signIn()} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                     <Button title="LOGIN as Team"
@@ -102,6 +126,46 @@ class LoginPage extends React.Component{
 
 
 class SignUpPage extends React.Component{
+    state = {
+        fullname:'',
+        age: 0,
+        email:'',
+        username:'',
+        password:'',
+        password2:'',     
+    }
+    async signUp(){
+        let inputs = this.state;
+        let navigation = this.props.navigation;
+        if(inputs.password.length < 6){
+            RN.Alert.alert('Error', 'Password must be at least 6 characters!');
+            return;
+        }
+        if(inputs.age < 15){
+            RN.Alert.alert('Error', 'You must be older than 14 years old!');
+            return;
+        }
+        if(inputs.password != inputs.password2){
+            RN.Alert.alert('Error', 'Passwords should be match!');
+            return;
+        }
+        try{
+            Firebase.auth().createUserWithEmailAndPassword(inputs.email, inputs.password).then(async function(user){
+                user.user.emailVerified = false;
+                usersRef.doc(user.user.uid).set({
+                    fullname:inputs.fullname,
+                    age:inputs.age,
+                    username:inputs.username,
+                    city:'Istanbul',
+                    photourl:'https://thumbor.forbes.com/thumbor/711x476/https://specials-images.forbesimg.com/dam/imageserve/e1555717e3dd4e858f39c9fcf2396b83/960x0.jpg'
+                });
+                user.user.sendEmailVerification();
+                RN.Alert.alert('Success!', 'Account is created, please verify your email');
+                navigation.navigate('Login');
+                return;
+            }).catch(error => RN.Alert.alert(error.code, error.message))
+        }catch(error){RN.Alert.alert(error.code, error.message)}
+    }
     render(){
         return(
             <RN.KeyboardAvoidingView style={{flex:1, backgroundColor:Colors.backgroundGreen, alignContent:'center', alignItems:'center', paddingTop:Constants.statusBarHeight}}>
@@ -128,49 +192,49 @@ class SignUpPage extends React.Component{
                                     <NB.Icon style={{fontSize:16}} name="persona" type="Zocial"/>
                                     <RN.Text style={styles.labelStyle}>  Full Name</RN.Text>
                                 </NB.Label>
-                                <NB.Input autoCapitalize="words" autoCompleteType="name"/>
+                                <NB.Input autoCapitalize="words" autoCompleteType="name" onChangeText={text => this.setState({fullname:text})}/>
                             </NB.Item>
                             <NB.Item floatingLabel>
                                 <NB.Label>
                                     <NB.Icon style={{fontSize:20}} name="calendar" type="Feather"/>
-                                    <RN.Text style={styles.labelStyle}> Age</RN.Text>
+                                    <RN.Text style={styles.labelStyle}>  Age</RN.Text>
                                 </NB.Label>
-                                <NB.Input keyboardType="numeric"/>
+                                <NB.Input keyboardType="numeric" onChangeText={text => this.setState({age:text})}/>
                             </NB.Item>
                             <NB.Item floatingLabel>
                                 <NB.Label>
                                     <NB.Icon style={{fontSize:20}} name="email" type="MaterialCommunityIcons"/>
-                                    <RN.Text style={styles.labelStyle}> E-mail</RN.Text>
+                                    <RN.Text style={styles.labelStyle}>  E-mail</RN.Text>
                                 </NB.Label>
-                                <NB.Input autoCapitalize="none" autoCompleteType="email"/>
+                                <NB.Input autoCapitalize="none" autoCompleteType="email" onChangeText={text => this.setState({email:text})}/>
                             </NB.Item>
                             <NB.Item floatingLabel>
                                 <NB.Label>
                                     <NB.Icon style={{fontSize:20}} name="user" type="Feather"/>
-                                    <RN.Text style={styles.labelStyle}> Username</RN.Text>
+                                    <RN.Text style={styles.labelStyle}>  Username</RN.Text>
                                 </NB.Label>
-                                <NB.Input autoCapitalize="none" autoCompleteType="username"/>
+                                <NB.Input autoCapitalize="none" autoCompleteType="username" onChangeText={text => this.setState({username:text})}/>
                             </NB.Item>
                             <NB.Item floatingLabel>
                                 <NB.Label>
                                     <NB.Icon style={{fontSize:20}} name="lock" type="Entypo"/>
-                                    <RN.Text style={styles.labelStyle}> Password</RN.Text>
+                                    <RN.Text style={styles.labelStyle}>  Password</RN.Text>
                                 </NB.Label>
-                                <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true}/>
+                                <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true} onChangeText={text => this.setState({password:text})}/>
                             </NB.Item>
                             <NB.Item floatingLabel>
                                 <NB.Label>
                                     <NB.Icon style={{fontSize:20}} name="lock" type="Entypo"/>
-                                    <RN.Text style={styles.labelStyle}> Password Again</RN.Text>
+                                    <RN.Text style={styles.labelStyle}>  Password Again</RN.Text>
                                 </NB.Label>
-                                <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true}/>
+                                <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true} onChangeText={text => this.setState({password2:text})}/>
                             </NB.Item>
                         </NB.Form>
                     </RN.ScrollView>
                 </RN.View>
                 <RN.View style={{flex:2, alignContent:"flex-end", padding:10}}>
-                    <Button title="LOGIN"
-                        onPress={() => this.props.navigation.navigate("Login")} 
+                    <Button title="Sign Up"
+                        onPress={async () => await this.signUp()} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                     <Button title="Create Team"

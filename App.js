@@ -14,7 +14,7 @@ import ListFields from './Pages/ListFields';
 
 export default function App() {
   return (
-    <PlayerProfile/>
+    <LoginPage/>
   );
 }
 

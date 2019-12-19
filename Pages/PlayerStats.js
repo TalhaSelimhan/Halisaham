@@ -21,36 +21,6 @@ export default class PlayerStats extends React.Component{
     }
     
     render(){
-        const data=[
-            {
-              name: 'Shooting',
-              population: 32,
-              color: 'rgba(131, 167, 234, 1)',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 12,
-            },
-            {
-              name: 'Passing',
-              population: 70,
-              color: '#F00',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-            {
-              name: 'Defending',
-              population: 94,
-              color: '#ffffff',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-            {
-              name: 'Pace',
-              population: 72,
-              color: 'rgb(0, 0, 255)',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-        ];
         return(
             <RN.View>
                 <Charts.LineChart

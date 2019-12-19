@@ -14,36 +14,48 @@ import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
 import colors from "../Config/Colors";
+import Firebase from "../Config/Firebase";
+require('firebase/firestore');
 
 
-var playerdata = {
-    imageurl:'https://i.hizliresim.com/1pljQA.jpg',
-    username:'koulibaly28',
-    name:'Kalidou Koulibaly',
-    age:28,
-    location:'Naples, Italy'
-}
+
 
 class PlayerProfile extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            show:1
+            show:1,
+            playerdata:{}
         }
     }
+    async loadPlayer(uid){
+        let that = this;
+        let userRef = Firebase.firestore().collection('users').doc(uid);
+        userRef.get().then(doc => {
+            if(doc.exists){
+                that.setState({playerdata:doc.data()})
+            }
+        })
+    }
+
+    async componentWillMount(){
+        await this.loadPlayer(this.props.navigation.getParam('uid'));
+    }
+
     render(){
+        let {playerdata} = this.state;
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:playerdata.imageurl}}
+                    <RN.Image source={{uri:playerdata.photourl}}
                               style={styles.playerImage}/>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
                         <RN.View style={styles.playerInfos}>
                             <RN.Text style={styles.usernameText}>{playerdata.username}</RN.Text>
-                            <RN.Text style={styles.otherInfos}>{playerdata.name}, {playerdata.age}</RN.Text>
-                            <RN.Text style={styles.otherInfos}>{playerdata.location}</RN.Text>
+                            <RN.Text style={styles.otherInfos}>{playerdata.fullname}, {playerdata.age}</RN.Text>
+                            <RN.Text style={styles.otherInfos}>{playerdata.city}</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.20, justifyContent:'space-around'}}>
                             <Button title="EDIT"
