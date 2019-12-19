@@ -145,6 +145,12 @@ class SignUpPage extends React.Component{
         try{
             Firebase.auth().createUserWithEmailAndPassword(inputs.email, inputs.password).then(async function(user){
                 user.user.emailVerified = false;
+                user.additionalUserInfo.username=inputs.username;
+                user.user.updateProfile({
+                    photoURL:'https://thumbor.forbes.com/thumbor/711x476/https://specials-images.forbesimg.com/dam/imageserve/e1555717e3dd4e858f39c9fcf2396b83/960x0.jpg',
+                    displayName:inputs.fullname,
+                    username:inputs.username
+                })
                 usersRef.doc(user.user.uid).set({
                     fullname:inputs.fullname,
                     age:inputs.age,
