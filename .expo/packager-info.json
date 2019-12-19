@@ -1,1 +1,9 @@
-{}
+{
+  "expoServerPort": 19000,
+  "packagerPort": 19007,
+  "packagerPid": 41222,
+  "expoServerNgrokUrl": "https://6s-3tk.exce.halisaham.exp.direct",
+  "packagerNgrokUrl": "https://packager.6s-3tk.exce.halisaham.exp.direct",
+  "ngrokPid": 41234,
+  "devToolsPort": 19002
+}

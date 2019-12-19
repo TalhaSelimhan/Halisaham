@@ -8,7 +8,7 @@ import Colors from "../Config/Colors";
 import Button from "../Components/Button";
 const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
-const height = Window.height;
+const height = Screen.height;
 const width = Window.width;
 import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
@@ -46,9 +46,14 @@ class PlayerProfile extends React.Component{
         let {playerdata} = this.state;
         return(
             <RN.View style={{flex:1}}>
+                
+                
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:playerdata.photourl}}
+                    <RN.Image source={{uri:'https://cdn.sporx.com/img/59/2019/neco.jpg'}}
                               style={styles.playerImage}/>
+                    <RN.TouchableOpacity onPress={this.props.navigation.openDrawer} style={{width:40, height:40, top:height*.05, left:width*.05}}>
+                        <NB.Icon name="menu" type="Feather" style={{color:'#111'}}/>
+                    </RN.TouchableOpacity>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
@@ -190,6 +195,7 @@ const styles = RN.StyleSheet.create({
     },
     thirdSection:{
         height:height*0.38,
+        paddingVertical:height*.02,
         width:width*.9,
         marginHorizontal:width*.05,
         backgroundColor:Colors.postBackground, 
