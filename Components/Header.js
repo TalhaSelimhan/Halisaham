@@ -15,7 +15,9 @@ export default class Header extends React.Component{
         return(
             <RN.View style={styles.headerFlex}>
                 <RN.View style={{flex:1,marginTop:Constants.statusBarHeight,alignItems:"center",justifyContent:"center"}}>
-                    <NB.Icon name="chevron-left" type="Entypo" onPress={() => this.props.navigation.pop()}/>
+                    {this.props.drawer ? 
+                        <NB.Icon name="menu" type="Feather" onPress={() => this.props.navigation.openDrawer()}/>:
+                        <NB.Icon name="chevron-left" type="Entypo" onPress={() => this.props.navigation.pop()}/>}
                 </RN.View>
                 <RN.View style={{flex:4,marginTop:Constants.statusBarHeight,alignItems:"center",justifyContent:"center"}}>
                     <RN.Text style={{color:"white",fontSize:24}}>{this.props.title}</RN.Text>

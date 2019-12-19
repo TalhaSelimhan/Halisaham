@@ -13,7 +13,7 @@ import {createAppContainer} from "react-navigation";
 import Firebase from '../Config/Firebase';
 require('firebase/firestore');
 import TeamProfile from "./TeamProfile";
-
+import Header from "../Components/Header";
 
 class Item extends React.Component{
     render(){
@@ -77,9 +77,7 @@ class ListTeams extends React.Component{
         console.log(teams)
         return(
             <RN.View style={styles.ListMatchesView}>
-                <RN.View style={{height:height*.2, width:width, alignItems:'center', justifyContent:'center', padding:5}}>
-                    <RN.Text style={{fontSize:24, color:'#fff', elevation:4, shadowColor:'black', shadowOpacity:.9, shadowOffset:{width:0, height:2}, letterSpacing:2, fontWeight:'800'}}>Teams List</RN.Text>
-                </RN.View>
+                <Header title='Teams List' drawer={true} navigation={this.props.navigation}/>
                 {loaded ? <RN.FlatList
                     data={teams}
                     renderItem={(item) => <Item team = {item.item} navigation={this.props.navigation}/>}
@@ -138,7 +136,7 @@ const styles = RN.StyleSheet.create({
     ListMatchesView:{
         width:width, 
         height:height, 
-        backgroundColor:Colors.backgroundGreen, 
+        backgroundColor:Colors.postBackground, 
         alignItems:'center', 
         paddingTop:statusBarHeight
     }
