@@ -5,6 +5,8 @@ import MapView from "react-native-maps";
 import * as NB from "native-base";
 import Constants from 'expo-constants';
 import Colors from "../Config/Colors";
+import Header from "../Components/Header";
+
 const window = RN.Dimensions.get("window");
 const width = window.width;
 const height = window.height;
@@ -54,9 +56,7 @@ export default class ListMatches extends React.Component{
     render(){
         return(
             <RN.View style={styles.FieldsListView}>
-                <RN.View style={styles.FieldsListHeader}>
-                    <RN.Text style={styles.FieldsListText}>Area List</RN.Text>
-                </RN.View>
+                <Header title="Fields" navigation={this.props.navigation} drawer={true}/>
                 <RN.ScrollView contentContainerStyle={{height:height*.7}}>
                     <Field field = {field}/>
                     <Field field = {field}/>
@@ -71,14 +71,15 @@ const styles = RN.StyleSheet.create({
     FieldRowView:{
         height:height*.2, 
         width:width*.9, 
-        backgroundColor:Colors.postBackground, 
+        backgroundColor:"#2a804b", 
         marginVertical:5,
         overflow:'hidden',
-        borderRadius:20
+        borderRadius:20,
+        marginTop:15
     },
     FieldHeader:{
         flex:3, 
-        backgroundColor:'#1A2938', 
+        backgroundColor:'#1d6639', 
         overflow:'hidden', 
         flexDirection:'row', 
         justifyContent:'space-between', 
@@ -86,7 +87,7 @@ const styles = RN.StyleSheet.create({
         paddingHorizontal:5
     },
     FieldHeaderText:{
-        color:'#eee', 
+        color:'#fff', 
         fontSize:16, 
         letterSpacing:2, 
         fontWeight:'500', 
@@ -115,9 +116,8 @@ const styles = RN.StyleSheet.create({
     FieldsListView:{
         width:width, 
         height:height, 
-        backgroundColor:Colors.backgroundGreen, 
+        backgroundColor:Colors.postBackground, 
         alignItems:'center', 
-        paddingTop:statusBarHeight
     },
     FieldsListHeader:{
         height:height*.2, 

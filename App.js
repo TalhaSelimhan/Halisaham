@@ -17,7 +17,7 @@ import TabNavigator from './Pages/TabNavigator';
 
 export default function App() {
   return (
-    <LoginPage/>
+    <ListFields/>
   );
 }
 

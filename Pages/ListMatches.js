@@ -3,6 +3,7 @@ import * as RN from "react-native";
 import * as RNE from "react-native-elements";
 import * as NB from "native-base";
 import Constants from 'expo-constants';
+import Header from "../Components/Header";
 import Colors from "../Config/Colors";
 const window = RN.Dimensions.get("window");
 const width = window.width;
@@ -49,9 +50,7 @@ export default class ListMatches extends React.Component{
     render(){
         return(
             <RN.View style={styles.ListMatchesView}>
-                <RN.View style={{height:height*.2, width:width, alignItems:'center', justifyContent:'center', padding:5}}>
-                    <RN.Text style={{fontSize:24, color:'#fff', shadowColor:'black', shadowOpacity:.9, shadowOffset:{width:0, height:2}}}>Match Posts</RN.Text>
-                </RN.View>
+                <Header title="Matches" drawer={true} navigation={this.props.navigation}/>
                 <RN.ScrollView contentContainerStyle={{height:height*.7}}>
                     <Post post = {post} labels={labels} title={title}/>
                     <Post post = {post} labels={labels} title={title}/>
@@ -67,14 +66,15 @@ const styles = RN.StyleSheet.create({
     MatchPostView:{
         height:height*.2, 
         width:width*.9, 
-        backgroundColor:Colors.postBackground, 
+        backgroundColor:"#2a804b", 
         marginVertical:5,
         overflow:'hidden',
-        borderRadius:20
+        borderRadius:20,
+        marginTop:15,
     },
     PostHeader:{
         flex:3, 
-        backgroundColor:'#1A2938', 
+        backgroundColor:'#1d6639', 
         overflow:'hidden', 
         flexDirection:'row', 
         justifyContent:'space-between', 
@@ -86,6 +86,7 @@ const styles = RN.StyleSheet.create({
         height:height, 
         backgroundColor:Colors.backgroundGreen, 
         alignItems:'center', 
-        paddingTop:statusBarHeight
+
+        backgroundColor:Colors.postBackground
     }
 })
