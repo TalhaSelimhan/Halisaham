@@ -8,9 +8,10 @@ import Button from "../Components/Button";
 import Constants from "expo-constants";
 import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
+import CreateTeam from "./CreateTeam";
 import TeamProfile from "./TeamProfile";
 import {createStackNavigator} from 'react-navigation-stack'
-import {createBottomTabNavigator, BottomTabBar, } from 'react-navigation-tabs';
+import {createDrawerNavigator} from 'react-navigation-drawer';
 
 
 
@@ -32,36 +33,18 @@ const Team = createStackNavigator({
     }
 });
 
-export default createAppContainer(
-  createBottomTabNavigator(
-    {
-      Home: {
-          screen:Team,
-          navigationOptions:{
-            tabBarIcon: ({tintColor}) => (<NB.Icon name='home' type="Entypo" style={{fontSize:26,color:tintColor}} />)
-          }
+  
+  const MyDrawerNavigator = createDrawerNavigator({
+    Home: {
+      screen: Player,
     },
-      Profile: {
-            screen:Player,
-            navigationOptions:{
-                tabBarIcon: ({tintColor}) => (<NB.Icon name='md-person' type="Ionicons" style={{fontSize:26,color:tintColor}} />)
-            }
-        }
+    Notifications: {
+      screen: Team,
     },
-    {
-        tabBarOptions: {
-            activeTintColor: Colors.backgroundGreen, 
-            inactiveTintColor: Colors.postSubText,
-            
-            labelStyle: {
-              fontSize: 14,
-            },
+  });
+  
+export default MyApp = createAppContainer(MyDrawerNavigator);
 
-            style: {
-              backgroundColor: Colors.postBackground,
-              paddingTop:5,
-            },
-          }
-    }
-  )
-);
+
+
+
