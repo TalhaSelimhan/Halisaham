@@ -39,17 +39,15 @@ class PlayerProfile extends React.Component{
     }
 
     async componentWillMount(){
-        await this.loadPlayer(this.props.navigation.getParam('uid'));
+        await this.loadPlayer(this.props.navigation.getParam('useruid'));
     }
 
     render(){
         let {playerdata} = this.state;
         return(
             <RN.View style={{flex:1}}>
-                
-                
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:'https://cdn.sporx.com/img/59/2019/neco.jpg'}}
+                    <RN.Image source={{uri:playerdata.photourl}}
                               style={styles.playerImage}/>
                     <RN.TouchableOpacity onPress={this.props.navigation.openDrawer} style={{width:40, height:40, top:height*.05, left:width*.05}}>
                         <NB.Icon name="menu" type="Feather" style={{color:'#111'}}/>

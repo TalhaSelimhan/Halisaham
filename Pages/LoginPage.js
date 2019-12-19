@@ -12,6 +12,7 @@ import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
 import AreaInfo from "./AreaInfo";
+import TabNavigator from "./TabNavigator";
 import CreateTeam from "./CreateTeam";
 import Firebase from "../Config/Firebase";
 require('firebase/firestore');
@@ -61,7 +62,7 @@ class LoginPage extends React.Component{
                     RN.Alert.alert('Authentication required', 'Please check and verify your email');
                     return;
                 }
-                navigation.navigate('Profile', {uid:user.user.uid});
+                navigation.navigate('TabBar', {useruid:user.user.uid});
                 return;
             }).catch(error => RN.Alert.alert(error.code, error.message))
         }catch(error){
@@ -108,14 +109,6 @@ class LoginPage extends React.Component{
                 <RN.View style={{flex:2, alignContent:"flex-end", padding:10, justifyContent:'space-around'}}>
                     <Button title="LOGIN"
                         onPress={() => this.signIn()} 
-                        containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
-                        textStyle={{color:Colors.headerBackground}}/>
-                    <Button title="LOGIN as Team"
-                        onPress={() => this.props.navigation.navigate("Team Profile", {uid:'CaqaMZUCD4j7hOiImhMe'})} 
-                        containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
-                        textStyle={{color:Colors.headerBackground}}/>
-                    <Button title="Area Info"
-                        onPress={() => this.props.navigation.navigate("Area Info", {uid:'lINlIUt4obOo5c0cz73j'})} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>
@@ -283,23 +276,9 @@ const LandingNavigator = createStackNavigator(
                     header:null
             }
         },
-        "Profile":{
-                screen:PlayerProfile,
-                title:'Profile',
-                navigationOptions:{
-                    header:null
-            }
-        },
-        "Team Profile":{
-            screen:TeamProfile,
-            title:'Team Profile',
-            navigationOptions:{
-                header:null
-            }
-        },
-        "Area Info":{
-            screen:AreaInfo,
-            title:'Area Info',
+        "TabBar":{
+            screen:PlayerProfile,
+            title:'Profile',
             navigationOptions:{
                 header:null
             }
