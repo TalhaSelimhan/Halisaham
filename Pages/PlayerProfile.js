@@ -39,7 +39,8 @@ class PlayerProfile extends React.Component{
     }
 
     async componentWillMount(){
-        await this.loadPlayer(this.props.navigation.getParam('useruid'));
+        let uid = this.props.navigation.getParam('useruid') ? this.props.navigation.getParam('useruid') : Firebase.auth().currentUser.uid;
+        await this.loadPlayer(uid);
     }
 
     render(){
