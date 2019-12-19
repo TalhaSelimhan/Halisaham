@@ -111,11 +111,11 @@ class LoginPage extends React.Component{
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                     <Button title="LOGIN as Team"
-                        onPress={() => this.props.navigation.navigate("Team Profile")} 
+                        onPress={() => this.props.navigation.navigate("Team Profile", {uid:'CaqaMZUCD4j7hOiImhMe'})} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                     <Button title="Area Info"
-                        onPress={() => this.props.navigation.navigate("Area Info")} 
+                        onPress={() => this.props.navigation.navigate("Area Info", {uid:'lINlIUt4obOo5c0cz73j'})} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>

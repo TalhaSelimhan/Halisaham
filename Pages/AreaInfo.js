@@ -14,7 +14,8 @@ import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
 import MapView from "react-native-maps";
-
+import Firebase from '../Config/Firebase';
+require('firebase/firestore');
 
 
 
@@ -23,21 +24,36 @@ class AreaInfo extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            show:1
+            show:1,
+            areadata:{}
         }
     }
+    async loadArea(uid){
+        let that = this;
+        let areaRef = Firebase.firestore().collection('areas').doc(uid);
+        areaRef.get().then(doc => {
+            if(doc.exists){
+                that.setState({areadata:doc.data()})
+            }
+        })
+    }
+
+    async componentWillMount(){
+        await this.loadArea(this.props.navigation.getParam('uid'));
+    }
     render(){
+        let {areadata} = this.state;
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
-                    <RN.Image source={{uri:'https://www.italian-traditions.com/wp-content/uploads/2016/08/stadio-san-paolo-napoli.jpg'}}
+                    <RN.Image source={{uri:areadata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
                         <RN.View style={{width:width*0.65, alignItems:'flex-start', justifyContent:'center'}}>
-                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>Stadio San Paolo</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>Naples, Italy</RN.Text>
+                            <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>{areadata.name}</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>{areadata.city}</RN.Text>
                             <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>4 km away</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.25, justifyContent:'center'}}>
@@ -45,17 +61,17 @@ class AreaInfo extends React.Component{
                                     containerStyle={{backgroundColor:'#fff', width:width*0.25, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <RN.View>
-                                <RN.Text style={{fontSize:16, fontWeight:'600', color:'#fff', textAlign:'center'}}>50$ / Hour</RN.Text>
+                                <RN.Text style={{fontSize:16, fontWeight:'600', color:'#fff', textAlign:'center'}}>{areadata.price}₺ / Hour</RN.Text>
                             </RN.View>                                                       
                         </RN.View>
                     </RN.View>
                     <RN.View style={styles.secondSection}>
                         <Rating.AirbnbRating
-                            defaultRating={2}
+                            defaultRating={areadata.rating}
                             isDisabled={true}
                             showRating={false}
                         />
-                        <RN.Text style={{textAlign:'center', fontSize:14, fontWeight:'400', color:Colors.headerText}}>725 reviews</RN.Text>
+                        <RN.Text style={{textAlign:'center', fontSize:14, fontWeight:'400', color:Colors.headerText}}>{areadata.ratingcount} reviews</RN.Text>
                     </RN.View>
                     <RN.TouchableOpacity style={styles.thirdSection}>
                         <RN.View style={{width:width*.8, height:height*.08, flexDirection:'row', justifyContent:'space-around'}}>
@@ -67,8 +83,8 @@ class AreaInfo extends React.Component{
                             <MapView  style={{height:height*.22, width:width*.7}} 
                                         pointerEvents="none"
                                         initialRegion={{
-                                            latitude: 40.8279365,
-                                            longitude: 14.1930611,
+                                            latitude: areadata.latitude,
+                                            longitude: areadata.longitude,
                                             latitudeDelta: 0.010,
                                             longitudeDelta: 0.010,
                                         }}

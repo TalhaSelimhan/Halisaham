@@ -19,7 +19,7 @@ import * as Permissions from 'expo-permissions';
 export default class CreateTeam extends React.Component{
     state = {
         image: null,
-        username: "",
+        teamname: "",
         shortname: "",
         contactnumber:null,
         description:"",
@@ -64,14 +64,14 @@ export default class CreateTeam extends React.Component{
                         <NB.Item floatingLabel>
                             <NB.Label >
                                 <NB.Icon style={{fontSize:20,color:"#ccc"}} name="users" type="Entypo"/>
-                                <RN.Text style={styles.labelStyle}> Username</RN.Text>
+                                <RN.Text style={styles.labelStyle}>  Team Name</RN.Text>
                             </NB.Label>
-                            <NB.Input style={{fontSize:18,color:"white"}} value={this.state.username} onChangeText={(username)=>this.setState({username})} autoCapitalize="none" autoCompleteType="username"/>
+                            <NB.Input style={{fontSize:18,color:"white"}} value={this.state.teamname} onChangeText={(teamname)=>this.setState({teamname})} autoCapitalize="none" autoCompleteType="username"/>
                         </NB.Item>
                         <NB.Item floatingLabel >
                             <NB.Label>
                                 <NB.Icon style={{fontSize:20,color:"#ccc"}} name="tournament" type="MaterialCommunityIcons"/>
-                                <RN.Text style={styles.labelStyle}> Short Name</RN.Text>
+                                <RN.Text style={styles.labelStyle}>  Short Name</RN.Text>
                                 <RN.Text>{this.state.shortname}</RN.Text>
                             </NB.Label>
                             <NB.Input style={{fontSize:18,color:"white"}} value={this.state.shortname} onChangeText={(shortname)=>this.setState({shortname})} autoCapitalize="none"/>
@@ -79,16 +79,9 @@ export default class CreateTeam extends React.Component{
                         <NB.Item floatingLabel >
                             <NB.Label>
                                 <NB.Icon style={{fontSize:20,color:"#ccc"}} name="telephone" type="Foundation"/>
-                                <RN.Text style={styles.labelStyle}> Contact Number</RN.Text>
+                                <RN.Text style={styles.labelStyle}>  Contact Number</RN.Text>
                             </NB.Label>
                             <NB.Input keyboardType="number-pad" value={this.state.contactnumber} onChangeText={(contactnumber)=>this.setState({contactnumber})} style={{fontSize:18,color:"white"}} autoCapitalize="none"/>
-                        </NB.Item>
-                        <NB.Item floatingLabel>
-                            <NB.Label style={{marginBottom:20}}>
-                                <NB.Icon style={{fontSize:20,color:"#ccc"}} name="description" type="MaterialIcons"/>
-                                <RN.Text style={styles.labelStyle}> Description</RN.Text>
-                            </NB.Label>
-                            <NB.Input style={{fontSize:18,color:"white"}} value={this.state.description} onChangeText={(description)=>this.setState({description})} autoCapitalize="none" />
                         </NB.Item>
                         <NB.Label style={{margin:20,marginTop:50,alignSelf:"center"}} onPress={this._pickImage}>
                             <NB.Icon style={{fontSize:20,color:"#ccc"}} name="photo" type="MaterialIcons"/>
