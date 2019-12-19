@@ -10,12 +10,15 @@ import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
 import CreateTeam from "./CreateTeam";
 import TeamProfile from "./TeamProfile";
+import ListMatches from "./ListMatches";
+import ListTeams from "./ListTeams";
+import ListFields from "./ListFields";
 import {createStackNavigator} from 'react-navigation-stack'
 import {createDrawerNavigator} from 'react-navigation-drawer';
 
 
 
-const Player = createStackNavigator({
+const PlayerPage = createStackNavigator({
   Home: {
         screen:PlayerProfile,
         navigationOptions:{
@@ -24,22 +27,44 @@ const Player = createStackNavigator({
   }
 });
 
-const Team = createStackNavigator({
-  Settings: {
-        screen:TeamProfile,
-        navigationOptions:{
-            header:null,
-        }
+const TeamsPage = createStackNavigator({
+    Home: {
+          screen:ListTeams,
+          navigationOptions:{
+              header:null,
+          }
     }
-});
+  });
+  const FieldsPage = createStackNavigator({
+    Home: {
+          screen:ListFields,
+          navigationOptions:{
+              header:null,
+          }
+    }
+  });
+  const MatchesPage = createStackNavigator({
+    Home: {
+          screen:ListMatches,
+          navigationOptions:{
+              header:null,
+          }
+    }
+  });
 
   
   const MyDrawerNavigator = createDrawerNavigator({
-    Home: {
-      screen: Player,
+    "Player Profile": {
+      screen: PlayerPage,
     },
-    Notifications: {
-      screen: Team,
+    Teams: {
+      screen: TeamsPage,
+    },
+    Fields: {
+        screen: FieldsPage,
+    },
+    "Last Matches": {
+        screen: MatchesPage,
     },
   });
   
