@@ -125,6 +125,7 @@ const styles = RN.StyleSheet.create({
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
         elevation: 4,
+        marginTop:15,
     },
     PostHeader:{
         flex:3, 
@@ -138,6 +139,5 @@ const styles = RN.StyleSheet.create({
         height:height, 
         backgroundColor:Colors.postBackground, 
         alignItems:'center', 
-        paddingTop:statusBarHeight
     }
 })
