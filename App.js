@@ -14,11 +14,27 @@ import ListFields from './Pages/ListFields';
 import MatchRequest from './Pages/MatchRequest';
 import InviteMatch from './Pages/InviteMatch';
 import TabNavigator from './Pages/TabNavigator';
+import Firebase from './Config/Firebase';
+require('firebase/firestore');
 
-export default function App() {
-  return (
-    <LoginPage/>
-  );
+export default class App extends React.Component{
+  state ={
+    signedIn:false,
+    checked:false,
+  }
+  async componentDidMount(){
+    await Firebase.auth().onAuthStateChanged((user) => {
+      if(user && user.emailVerified) this.setState({signedIn: true, checked: true}); 
+      else this.setState({checked:true})
+    });
+  }
+  render(){
+    let {signedIn, checked} = this.state;
+    return (
+      signedIn ? <TabNavigator/> : checked ? <LoginPage/> : <View/>
+    );
+  }
+  
 }
 
 const styles = StyleSheet.create({
