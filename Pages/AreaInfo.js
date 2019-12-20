@@ -14,6 +14,7 @@ import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
 import MapView from "react-native-maps";
+//import {MapView} from "expo"
 import Firebase from '../Config/Firebase';
 require('firebase/firestore');
 
@@ -25,7 +26,8 @@ class AreaInfo extends React.Component{
         super(props);
         this.state={
             show:1,
-            areadata:{}
+            areadata:{},
+            loaded:false,
         }
     }
     async loadArea(uid){
@@ -33,7 +35,7 @@ class AreaInfo extends React.Component{
         let areaRef = Firebase.firestore().collection('areas').doc(uid);
         areaRef.get().then(doc => {
             if(doc.exists){
-                that.setState({areadata:doc.data()})
+                that.setState({areadata:doc.data(), loaded:true})
             }
         })
     }
@@ -42,7 +44,8 @@ class AreaInfo extends React.Component{
         await this.loadArea(this.props.navigation.getParam('uid'));
     }
     render(){
-        let {areadata} = this.state;
+        let {areadata, loaded} = this.state;
+        if(!loaded) return <RN.View/>
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
@@ -88,13 +91,15 @@ class AreaInfo extends React.Component{
                                          overflow:'hidden'}}>
                             <MapView  style={{height:height*.22, width:width*.7}} 
                                         pointerEvents="none"
+                                        provider="google"
                                         initialRegion={{
                                             latitude: areadata.latitude,
                                             longitude: areadata.longitude,
                                             latitudeDelta: 0.010,
                                             longitudeDelta: 0.010,
-                                        }}
-                            />
+                                        }}>
+                                <MapView.Marker coordinate={{latitude:areadata.latitude, longitude:areadata.longitude}}/>
+                            </MapView>
                         </RN.View>
                     </RN.TouchableOpacity>
 
