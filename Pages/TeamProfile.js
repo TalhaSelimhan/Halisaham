@@ -42,8 +42,8 @@ class TeamProfile extends React.Component{
                 <RN.View style={styles.imageView}>
                     <RN.Image source={{uri:teamdata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
-                    <RN.TouchableOpacity onPress={this.props.navigation.openDrawer} style={{width:40, height:40, top:height*.05, left:width*.05}}>
-                        <NB.Icon name="menu" type="Feather" style={{color:'#111'}}/>
+                    <RN.TouchableOpacity onPress={()=> this.props.navigation.pop()} style={{width:40, height:40, top:height*.05, left:width*.05}}>
+                        <NB.Icon name="chevron-left" type="Entypo" style={{color:'#111'}}/>
                     </RN.TouchableOpacity>
                 </RN.View>
                 <RN.View style={styles.infoView}>

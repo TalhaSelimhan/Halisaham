@@ -48,6 +48,9 @@ class AreaInfo extends React.Component{
                 <RN.View style={styles.imageView}>
                     <RN.Image source={{uri:areadata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
+                    <RN.TouchableOpacity onPress={()=> this.props.navigation.pop()} style={{width:40, height:40, top:height*.05, left:width*.05}}>
+                        <NB.Icon name="chevron-left" type="Entypo" style={{color:'#111'}}/>
+                    </RN.TouchableOpacity>
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
@@ -79,7 +82,10 @@ class AreaInfo extends React.Component{
                             <RN.Text style={{color:Colors.postText, fontSize:18, fontWeight:'700', textAlign:'center'}}>Location</RN.Text>
                             <NB.Icon name="ios-arrow-forward" type="Ionicons" style={{fontSize:18, color:Colors.postSubText, textAlign:'center'}}/>
                         </RN.View>
-                        <RN.View style={{width:width*.7, height:height*.22, justifyContent:'center', borderTopRightRadius:width*.15, borderBottomLeftRadius:width*.15, overflow:'hidden'}}>
+                        <RN.View style={{width:width*.7, height:height*.22, justifyContent:'center', 
+                                         borderTopRightRadius:width*.15, borderBottomLeftRadius:width*.15, 
+                                         borderBottomRightRadius:width*.05, borderTopLeftRadius:width*.05,
+                                         overflow:'hidden'}}>
                             <MapView  style={{height:height*.22, width:width*.7}} 
                                         pointerEvents="none"
                                         initialRegion={{

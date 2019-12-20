@@ -6,18 +6,22 @@ import * as NB from "native-base";
 import Constants from 'expo-constants';
 import Colors from "../Config/Colors";
 import Header from "../Components/Header";
-
+import AreaInfo from './AreaInfo';
+import {createStackNavigator} from "react-navigation-stack"
+import {createAppContainer} from "react-navigation";
 const window = RN.Dimensions.get("window");
 const width = window.width;
 const height = window.height;
 const statusBarHeight = Constants.statusBarHeight;
+import Firebase from '../Config/Firebase';
+require('firebase/firestore');
 
 
 class Field extends React.Component{
     render(){
-        var {field} = this.props;
+        var {field, navigation} = this.props;
         return(
-            <RN.View style={styles.FieldRowView}>
+            <RN.TouchableOpacity style={styles.FieldRowView} onPress={() => navigation.navigate('AreaInfo', {uid:field.id})}>
                 <RN.View style={styles.FieldHeader}>
                     <RN.Text style={styles.FieldHeaderText}>{field.name}</RN.Text>
                     <NB.Icon style={{color:'#eee'}} name="chevron-right" type="Entypo"/>
@@ -25,46 +29,74 @@ class Field extends React.Component{
                 <RN.View style={styles.InfoField}>
                     <RN.View style={{flex:1}}>
                         <RN.Text style={styles.InfoLabel}>Location</RN.Text>
-                        <RN.Text style={styles.InfoLabel}>Distance</RN.Text>
+                        <RN.Text style={styles.InfoLabel}>Rating</RN.Text>
                         <RN.Text style={styles.InfoLabel}>Contact</RN.Text>
                     </RN.View>
                     <RN.View style={{flex:1}}>
-                        <RN.Text style={styles.InfoText}>{field.position}</RN.Text>
-                        <RN.Text style={styles.InfoText}>3km away</RN.Text>
+                        <RN.Text style={styles.InfoText}>{field.city}</RN.Text>
+                        <RN.Text style={styles.InfoText}>{field.rating} ({field.ratingcount})</RN.Text>
                         <RN.Text style={styles.InfoText}>{field.contact}</RN.Text>
                     </RN.View>
                 </RN.View>
-            </RN.View>
+            </RN.TouchableOpacity>
         )
     }
 }
 
-var field = {
-    name: 'TT Arena',
-    position:'Maslak/Istanbul',
-    contact: '+90 544 444 44 44',
-    location: {
-        latitude: 40.8279365,
-        longitude: 14.1930611,
-        latitudeDelta: 0.020,
-        longitudeDelta: 0.020,
-    },
-}
 
-
-export default class ListMatches extends React.Component{
+class ListFields extends React.Component{
+    state={
+        areas:[],
+        loaded:false
+    }
+    async loadAreas(){
+        let that = this;
+        let areas = [];
+        let areasRef = Firebase.firestore().collection('areas');
+        await areasRef.get().then(snapshot => {
+            snapshot.docs.forEach(doc => {
+                let area = doc.data();
+                area.id = doc.id;
+                areas.push(area);
+            })
+        })
+        this.setState({areas:areas, loaded:true});
+    }
+    async componentWillMount(){
+        await this.loadAreas();
+    }
     render(){
+        let {areas, loaded} = this.state;
+        if(!loaded) return <RN.View/>
         return(
             <RN.View style={styles.FieldsListView}>
                 <Header title="Fields" navigation={this.props.navigation} drawer={true}/>
-                <RN.ScrollView contentContainerStyle={{height:height*.7}}>
-                    <Field field = {field}/>
-                    <Field field = {field}/>
-                </RN.ScrollView>
+                <RN.FlatList 
+                    data={areas}
+                    renderItem={item => <Field field={item.item} navigation={this.props.navigation}/>}
+                    keyExtractor={item => item.id}
+                />
             </RN.View>
         )
     }
 }
+
+const ListStack = createStackNavigator({
+    List:{
+        screen:ListFields,
+        navigationOptions:{
+            header:null,
+        }
+    },
+    AreaInfo:{
+        screen:AreaInfo,
+        navigationOptions:{
+            header:null
+        }
+    }
+})
+
+export default createAppContainer(ListStack);
 
 
 const styles = RN.StyleSheet.create({
