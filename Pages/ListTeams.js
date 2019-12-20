@@ -52,7 +52,8 @@ class Item extends React.Component{
 class ListTeams extends React.Component{
     state={
         teams:[],
-        loaded:false
+        loaded:false,
+        search:""
     }
     async loadTeams(){
         let that = this;
@@ -78,9 +79,16 @@ class ListTeams extends React.Component{
         return(
             <RN.View style={styles.ListMatchesView}>
                 <Header title='Teams List' drawer={true} navigation={this.props.navigation}/>
+                <RN.TextInput onChangeText={text=>this.setState({search:text})} placeholder="Search teams.." style={{paddingLeft:20,height:"5%",borderRadius:2,borderColor:"black",borderRadius:40,marginTop:10,width:"90%",backgroundColor:"white"}} />
                 {loaded ? <RN.FlatList
                     data={teams}
-                    renderItem={(item) => <Item team = {item.item} navigation={this.props.navigation}/>}
+                    extraData={this.state.search}
+                    renderItem={(item) =>  {
+                        if(item.item.name.toLowerCase().includes(this.state.search.toLowerCase())){
+                            return <Item team = {item.item} navigation={this.props.navigation}/>
+                        }
+                    }
+                }
                     keyExtractor={(item) => item.id}
                     
                 /> : <RN.View/>}
