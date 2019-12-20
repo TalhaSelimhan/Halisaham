@@ -11,6 +11,7 @@ import PlayerProfile from "./PlayerProfile";
 import ListMatches from "./ListMatches";
 import ListTeams from "./ListTeams";
 import ListFields from "./ListFields";
+import CreateTeam from "./CreateTeam";
 import {createStackNavigator} from 'react-navigation-stack'
 import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
 import Firebase from "../Config/Firebase";
@@ -86,8 +87,11 @@ const TeamsPage = createStackNavigator({
     Fields: {
         screen: FieldsPage,
     },
-    "Last Matches": {
+    "Matches": {
         screen: MatchesPage,
+    },
+    "Create Team":{
+        screen:CreateTeam
     }
   },
   {
