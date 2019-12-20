@@ -18,7 +18,6 @@ import Header from "../Components/Header";
 class Item extends React.Component{
     render(){
         var {team, navigation} = this.props;
-        console.log(team);
         return(
             <RN.TouchableOpacity style={styles.MatchPostView} onPress={() => navigation.navigate('TeamProfile', {uid:team.id})} >
                 <RN.ImageBackground source={{uri:team.photourl}} style={{width:width*.9, height:height*.2}} resizeMode="cover">
@@ -74,7 +73,7 @@ class ListTeams extends React.Component{
     }
     render(){
         let {teams, loaded} = this.state;
-        console.log(teams)
+
         return(
             <RN.View style={styles.ListMatchesView}>
                 <Header title='Teams List' drawer={true} navigation={this.props.navigation}/>

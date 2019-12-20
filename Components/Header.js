@@ -35,6 +35,14 @@ const styles = RN.StyleSheet.create({
         backgroundColor:Colors.backgroundGreen,
         borderBottomLeftRadius:30,
         borderBottomRightRadius:30,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     labelStyle:{
         color:'#ccc', 
