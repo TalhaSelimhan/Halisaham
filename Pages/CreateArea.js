@@ -70,7 +70,6 @@ export default class CreateArea extends React.Component{
             latitudeDelta:0.001,
             longitudeDelta:0.001},
             loaded:true});
-        RN.Alert.alert(this.state.location);
 
         
       };
@@ -117,10 +116,10 @@ export default class CreateArea extends React.Component{
                             {image &&
                             <RN.Image source={{ uri: image }} style={styles.image} />}
                         </RN.View>
-                        <RN.View >
+                        <RN.View>
                         {this.state.loaded && <MapView
-                            provide="google"
-                            style={{width:300,height:300,justifyContent:"center",alignSelf:"center",marginTop:20}}
+
+                            style={{width:300,height:300,justifyContent:"center",alignSelf:"center",marginTop:20,borderRadius:40}}
                             initialRegion={{
                                 latitude:this.state.location.latitude,
                                 longitude:this.state.location.longitude,
@@ -137,7 +136,7 @@ export default class CreateArea extends React.Component{
                                 }}
                                 onDragEnd={async (e) => {
                                      await this.setState({ x: e.nativeEvent.coordinate });
-                                    RN.Alert.alert(this.state.x);
+
                                 }}
                                 />
                             </MapView>}
@@ -146,7 +145,7 @@ export default class CreateArea extends React.Component{
                     </NB.Form>
                 </RN.ScrollView>
                 <RN.View style={{flex:1,justifyContent:"center" ,marginBottom:20,alignItems:"center"}}>
-                    <Button title={"CREATE TEAM"} />
+                    <Button title="CREATE TEAM" />
                 </RN.View>
             </RN.View>
         )
