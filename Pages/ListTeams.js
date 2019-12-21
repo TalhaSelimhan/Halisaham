@@ -13,6 +13,7 @@ import {createAppContainer} from "react-navigation";
 import Firebase from '../Config/Firebase';
 require('firebase/firestore');
 import TeamProfile from "./TeamProfile";
+import ReserveArea from "./ReserveArea";
 import Header from "../Components/Header";
 
 class Item extends React.Component{
@@ -108,6 +109,12 @@ const ListStack = createStackNavigator({
     },
     TeamProfile:{
         screen:TeamProfile,
+        navigationOptions:{
+            header:null
+        }
+    },
+    ReserveArea:{
+        screen:ReserveArea,
         navigationOptions:{
             header:null
         }

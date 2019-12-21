@@ -58,7 +58,7 @@ export default class CreateTeam extends React.Component{
         let image = this.state.image
         return(
             <RN.View style={{flex:1,backgroundColor:Colors.postBackground}}>
-                <Header title="Create New Team" navigation={this.props.navigation}/>
+                <Header title="Create New Team" navigation={this.props.navigation} drawer={true}/>
                 <RN.View style={{flex:8}}>
                     <NB.Form>
                         <NB.Item floatingLabel>

@@ -17,6 +17,7 @@ import MapView from "react-native-maps";
 //import {MapView} from "expo"
 import Firebase from '../Config/Firebase';
 require('firebase/firestore');
+import StarRating from 'react-native-star-rating';
 
 
 
@@ -28,20 +29,55 @@ class AreaInfo extends React.Component{
             show:1,
             areadata:{},
             loaded:false,
+            ratingcolor: '#fff'
         }
     }
+
     async loadArea(uid){
         let that = this;
         let areaRef = Firebase.firestore().collection('areas').doc(uid);
         areaRef.get().then(doc => {
             if(doc.exists){
-                that.setState({areadata:doc.data(), loaded:true})
+                let area = doc.data();
+                area.canVote = !area.votes.includes(Firebase.auth().currentUser.uid);
+                that.setState({areadata:area, loaded:true})
             }
         })
     }
 
+    getRatingColor(){
+        let rating = this.state.areadata.rating;
+        let red = 200 + (rating-1) * 13.75;
+        let green = 200 + (rating-1) * 13.75;
+        let blue = 153 - (rating-1) * 25.5;
+        let color = 'rgba('+red.toString()+','+green.toString()+','+blue.toString()+',1)';
+        return color;
+    }
     async componentWillMount(){
-        await this.loadArea(this.props.navigation.getParam('uid'));
+        let area = this.props.navigation.getParam('area');
+        if(area){
+            this.setState({areadata:area, loaded:true})
+        }
+        else await this.loadArea(this.props.navigation.getParam('uid'));
+    }
+    rateFinish(rating){
+        RN.Alert.alert('You gave ' + rating.toString() + ' points', 
+                       'Do you confirm this rating', 
+                    [{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel',},
+                     {text: 'Yes', onPress: () => this.giveRating(rating), style:'default'}])
+    }
+    async giveRating(newRating){
+        let {rating, ratingcount, votes, canVote} = this.state.areadata;
+        let areaRef = Firebase.firestore().collection('areas').doc(this.state.areadata.id);
+        let updatedRating = (rating*ratingcount + newRating) / (++ratingcount);
+        updatedRating = updatedRating.toFixed(1);
+        votes.push(Firebase.auth().currentUser.uid);
+        this.setState({areadata:{...this.state.areadata, rating:updatedRating, votes:votes, ratingcount:ratingcount , canVote:false}});
+        await areaRef.update({
+            rating:updatedRating,
+            ratingcount:ratingcount,
+            votes:votes
+        })
     }
     render(){
         let {areadata, loaded} = this.state;
@@ -63,7 +99,7 @@ class AreaInfo extends React.Component{
                             <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>4 km away</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.25, justifyContent:'center'}}>
-                            <Button title="RESERVE"
+                            <Button title="RESERVE" onPress={() => this.props.navigation.navigate('ReserveArea')}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.25, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <RN.View>
@@ -72,10 +108,17 @@ class AreaInfo extends React.Component{
                         </RN.View>
                     </RN.View>
                     <RN.View style={styles.secondSection}>
-                        <Rating.AirbnbRating
-                            defaultRating={areadata.rating}
-                            isDisabled={true}
+                        <RN.Text style={{textAlign:'center', fontSize:16, fontWeight:'600', color:this.getRatingColor()}}>{areadata.rating} / 5</RN.Text>
+                        <Rating.Rating
+                            type="custom"
+                            ratingColor={this.getRatingColor()}
+                            startingValue={areadata.rating}
+                            readonly={!areadata.canVote}
                             showRating={false}
+                            fractions={1}
+                            onFinishRating={rating => this.rateFinish(rating)}
+                            tintColor={Colors.backgroundGreen}
+                            
                         />
                         <RN.Text style={{textAlign:'center', fontSize:14, fontWeight:'400', color:Colors.headerText}}>{areadata.ratingcount} reviews</RN.Text>
                     </RN.View>
