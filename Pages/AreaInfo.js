@@ -35,17 +35,30 @@ class AreaInfo extends React.Component{
         }
     }
 
-    async loadArea(uid){
+    async loadArea(uid, _areaowner){
         let that = this;
-        let areaRef = Firebase.firestore().collection('areas').doc(uid);
-        areaRef.get().then(doc => {
-            if(doc.exists){
-                let area = doc.data();
-                area.id = uid;
-                area.canVote = !area.votes.includes(Firebase.auth().currentUser.uid);
-                that.setState({areadata:area})
-            }
-        })
+        let areaRef = Firebase.firestore().collection('areas');
+        areaRef = _areaowner ? areaRef.where('owneruid', '==', uid).limit(1) : areaRef.doc(uid);
+        if(_areaowner){
+            areaRef.get().then(snapshot => {
+                snapshot.docs.forEach(doc => {
+                    let area = doc.data();
+                    area.id = doc.id;
+                    area.canVote = false;
+                    that.setState({areadata:area});
+                })
+            })
+        }
+        else{
+            areaRef.get().then(doc => {
+                if(doc.exists){
+                    let area = doc.data();
+                    area.id = uid;
+                    area.canVote = !area.votes.includes(Firebase.auth().currentUser.uid);
+                    that.setState({areadata:area});
+                }
+            })
+        }
     }
 
     getRatingColor(){
@@ -133,16 +146,26 @@ class AreaInfo extends React.Component{
 
     async componentWillMount(){
         let area = this.props.navigation.getParam('area');
+        let uid = this.props.navigation.getParam('uid');
         if(area){
-            this.setState({areadata:area})
+            RN.Alert.alert('Area from nav is not null')
+            this.setState({areadata:area, isareaowner:false})
         }
-        else await this.loadArea(this.props.navigation.getParam('uid'));
+        else if(uid){
+            RN.Alert.alert('Uid from nav is not null')
+            await this.loadArea(uid, false);
+            this.setState({isareaowner:false})
+        }
+        else{
+            await this.loadArea(Firebase.auth().currentUser.uid, true);
+            this.setState({isareaowner:true})
+        }
         let location = await this._getLocationAsync();
         let distance = this.getDistance(location.latitude, location.longitude)
-        this.setState({userlocation:location, loaded:true, distance:distance})
+        this.setState({userlocation:location, distance:distance, loaded:true})
     }
     render(){
-        let {areadata, modalVisible, distance, loaded} = this.state;
+        let {areadata, modalVisible, distance, loaded, isareaowner} = this.state;
         if(!loaded) return <RN.View/>
         return(
             <RN.View style={{flex:1}}>
@@ -150,9 +173,13 @@ class AreaInfo extends React.Component{
                 <RN.View style={styles.imageView}>
                     <RN.Image source={{uri:areadata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
+                    {isareaowner ? 
+                    <RN.TouchableOpacity onPress={this.props.navigation.openDrawer} style={{width:40, height:40, top:height*.05, left:width*.05}}>
+                        <NB.Icon name="menu" type="Feather" style={{color:'#111'}}/>
+                    </RN.TouchableOpacity> : 
                     <RN.TouchableOpacity onPress={()=> this.props.navigation.pop()} style={{width:40, height:40, top:height*.05, left:width*.05}}>
                         <NB.Icon name="chevron-left" type="Entypo" style={{color:'#111'}}/>
-                    </RN.TouchableOpacity>
+                    </RN.TouchableOpacity>}
                 </RN.View>
                 <RN.View style={styles.infoView}>
                     <RN.View style={styles.firstSection}>
@@ -162,7 +189,7 @@ class AreaInfo extends React.Component{
                             <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>{(distance/1000).toFixed(2)} km</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.25, justifyContent:'center'}}>
-                            <Button title="RESERVE" onPress={() => this.setState({modalVisible:!modalVisible})}
+                            <Button title={isareaowner ? "EDIT":"RESERVE"} onPress={() => {if(!isareaowner) this.setState({modalVisible:!modalVisible})}}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.25, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <RN.View>

@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import {View,Text,TouchableOpacity,SafeAreaView,Dimensions,ScrollView} from "react-native";
+import {View,Text,TouchableOpacity,SafeAreaView,Dimensions,ScrollView, Alert} from "react-native";
 import * as NB from "native-base";
 import * as RNE from "react-native-elements";
 import {createAppContainer} from "react-navigation";
@@ -21,31 +21,8 @@ const Screen = Dimensions.get("screen");
 const height = Screen.height;
 const width = Screen.width;
 
-const PlayerPage = createStackNavigator({
-  Home: {
-        screen:PlayerProfile,
-        navigationOptions:{
-            header:null,
-        }
-  }
-});
 
-const TeamsPage = createStackNavigator({
-    Home: {
-          screen:ListTeams,
-          navigationOptions:{
-              header:null,
-          }
-    }
-  });
-  const FieldsPage = createStackNavigator({
-    Home: {
-          screen:ListFields,
-          navigationOptions:{
-              header:null,
-          }
-    }
-  });
+
   const MatchesPage = createStackNavigator({
     Home: {
           screen:ListMatches,
@@ -77,22 +54,13 @@ const TeamsPage = createStackNavigator({
         </View>
       );
   }
-  
-const MyDrawerNavigator = createDrawerNavigator({
-    "Player Profile": {
-      screen: PlayerPage,
-    },
-    Teams: {
-      screen: TeamsPage,
-    },
-    Fields: {
-        screen: FieldsPage,
+
+const AreaOwnerApp = createDrawerNavigator({
+    "My Area": {
+      screen: AreaInfo,
     },
     "Matches": {
         screen: MatchesPage,
-    },
-    "Create Team":{
-        screen:CreateTeam
     }
   },
   {
@@ -101,11 +69,11 @@ const MyDrawerNavigator = createDrawerNavigator({
       activeTintColor: "white",
     },
     drawerWidth:width*0.65
-}
+  }
 );
 
 
-export default createAppContainer(MyDrawerNavigator);
+export default createAppContainer(AreaOwnerApp);
 
 
 

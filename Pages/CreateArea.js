@@ -117,9 +117,9 @@ export default class CreateArea extends React.Component{
         return url;
       }
 
-
-
     createArea(){
+        let navigation = this.props.navigation;
+        let uid = navigation.getParam('uid');
         let inputs =this.state;
         if(inputs.areaName==""){
             RN.Alert.alert("Create failed","Area name cannot be empty.");
@@ -148,6 +148,7 @@ export default class CreateArea extends React.Component{
             rating:2.5,
             ratingcount:0,
             votes:[],
+            owneruid:uid
         }).then(async (doc)=>{
             RN.Alert.alert(doc.id);
             let imageUri= await this.resimYukle(this.state.image,"/areas/"+doc.id);
@@ -155,7 +156,8 @@ export default class CreateArea extends React.Component{
                 photourl:imageUri
             });    
         });
-        
+        RN.Alert.alert('Success!', 'Your area is created, please sign in!');
+        navigation.navigate('Login')
 
     }
 
@@ -163,7 +165,7 @@ export default class CreateArea extends React.Component{
         let image = this.state.image
         return(
             <RN.View style={{flex:1,backgroundColor:Colors.postBackground}}>
-                <Header title="Create Area"/>
+                <Header title="Create Area" navigation={this.props.navigation}/>
                 <RN.ScrollView style={{height:"65%"}}>
                     <NB.Form>
                         <NB.Item floatingLabel>

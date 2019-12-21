@@ -13,8 +13,9 @@ import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
 import AreaInfo from "./AreaInfo";
 import TabNavigator from "./TabNavigator";
-import CreateTeam from "./CreateTeam";
+import CreateArea from "./CreateArea";
 import Firebase from "../Config/Firebase";
+
 require('firebase/firestore');
 const usersRef = Firebase.firestore().collection('users');
 
@@ -125,7 +126,8 @@ class SignUpPage extends React.Component{
         email:'',
         username:'',
         password:'',
-        password2:'',     
+        password2:'',
+        isareaowner:false,
     }
     async signUp(){
         let inputs = this.state;
@@ -156,11 +158,13 @@ class SignUpPage extends React.Component{
                     age:inputs.age,
                     username:inputs.username,
                     city:'Istanbul',
-                    photourl:'https://thumbor.forbes.com/thumbor/711x476/https://specials-images.forbesimg.com/dam/imageserve/e1555717e3dd4e858f39c9fcf2396b83/960x0.jpg'
+                    photourl:'https://thumbor.forbes.com/thumbor/711x476/https://specials-images.forbesimg.com/dam/imageserve/e1555717e3dd4e858f39c9fcf2396b83/960x0.jpg',
+                    isareaowner:inputs.isareaowner
                 });
                 user.user.sendEmailVerification();
                 RN.Alert.alert('Success!', 'Account is created, please verify your email');
-                navigation.navigate('Login');
+                if(inputs.isareaowner) navigation.navigate('Create Area', {uid:user.user.uid})
+                else navigation.navigate('Login');
                 return;
             }).catch(error => RN.Alert.alert(error.code, error.message))
         }catch(error){RN.Alert.alert(error.code, error.message)}
@@ -231,13 +235,20 @@ class SignUpPage extends React.Component{
                         </NB.Form>
                     </RN.ScrollView>
                 </RN.View>
-                <RN.View style={{flex:2, alignContent:"flex-end", padding:10}}>
+                <RN.View style={{flex:2, alignContent:"center", justifyContent:'center', padding:10}}>
+                    
+                    <RNE.CheckBox
+                        center
+                        title='I am an area owner'
+                        checkedColor='yellow'
+                        textStyle={{color:'#eee', fontSize:16, fontWeight:'500', letterSpacing:1.3}}
+                        onIconPress={() => this.setState({isareaowner:!this.state.isareaowner})}
+                        onPress={() => this.setState({isareaowner:!this.state.isareaowner})}
+                        containerStyle={{width:'70%', backgroundColor:'transparent', borderWidth:0, alignContent:'center', justifyContent:'center', alignItems:'center'}}
+                        checked={this.state.isareaowner}
+                    />
                     <Button title="Sign Up"
                         onPress={async () => await this.signUp()} 
-                        containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
-                        textStyle={{color:Colors.headerBackground}}/>
-                    <Button title="Create Team"
-                        onPress={() => this.props.navigation.navigate("Create Team")} 
                         containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                         textStyle={{color:Colors.headerBackground}}/>
                 </RN.View>
@@ -247,24 +258,20 @@ class SignUpPage extends React.Component{
 }
 
 
-const loginSignupNavigator = createMaterialTopTabNavigator(
-    {
+const loginSignupNavigator = createMaterialTopTabNavigator({
         "Login":{
             screen:LoginPage,
         },
         "Sign Up":{
             screen:SignUpPage
         }
-    },
-    {
+    },{
         swipeEnabled:true,
         tabBarOptions:{
             style:{display:'none'}
         },
         lazy:true
-    }
-
-)
+    })
 
 const LandingNavigator = createStackNavigator(
     {
@@ -283,15 +290,15 @@ const LandingNavigator = createStackNavigator(
             }
         },
         "TabBar":{
-            screen:PlayerProfile,
-            title:'Profile',
+            screen:TabNavigator,
+            title:'Tab Navigator',
             navigationOptions:{
                 header:null
             }
         },
-        "Create Team":{
-            screen:CreateTeam,
-            title:'Create Team',
+        "Create Area":{
+            screen:CreateArea,
+            title:'Create Area',
             navigationOptions:{
                 header:null
             }
