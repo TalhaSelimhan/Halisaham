@@ -10,6 +10,7 @@ import Firebase from "../Config/Firebase";
 const window = RN.Dimensions.get("window");
 const width = window.width;
 const height = window.height;
+import ModalDropdown from 'react-native-modal-dropdown';
 
 
 
@@ -43,35 +44,21 @@ class TimePicker extends React.Component{
     }
     render(){
         let {that} = this.props;
+        let options = ["12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","24:00","01:00"]
         return(
-            <RN.View style={{alignContent:'center', alignItems:'center', padding:8}}>
+            <RN.View>
                 <NB.Item>
-                    <NB.Label>
+                    <NB.Label style={{margin:8, marginLeft:5}}>
                         <NB.Icon style={{fontSize:20,color:"#ccc"}} name="clock" type="Entypo"/>
-                        <NB.Text style={{fontSize:14,color:"#ccc", paddingLeft:10}}>Select Hour</NB.Text>
                     </NB.Label>
-                    <RN.Picker  ref={c => this.picker = c}
-                                mode="dropdown"
-                                selectedValue={this.state.time}
-                                onValueChange={value => {that.setState({selectedTime:value}); this.setState({time:value})}}
-                                style={{flex:1, height: 50, width:width*.3}}
-                                itemStyle={{textAlign:'center'}}>
-                        <RN.PickerItem value={12} label="12:00"/>
-                        <RN.PickerItem value={13} label="13:00"/>        
-                        <RN.PickerItem value={14} label="14:00"/>        
-                        <RN.PickerItem value={15} label="15:00"/>        
-                        <RN.PickerItem value={16} label="16:00"/>        
-                        <RN.PickerItem value={17} label="17:00"/>        
-                        <RN.PickerItem value={18} label="18:00"/>        
-                        <RN.PickerItem value={19} label="19:00"/>        
-                        <RN.PickerItem value={20} label="20:00"/>
-                        <RN.PickerItem value={21} label="21:00"/>
-                        <RN.PickerItem value={22} label="22:00"/>
-                        <RN.PickerItem value={23} label="23:00"/>
-                        <RN.PickerItem value={24} label="00:00"/>
-                    </RN.Picker>
-                    
-                    
+                    <ModalDropdown 
+                        ref = {c => this.select = c}
+                        dropdownStyle={{width:width*.3, height:height*.2, borderRadius:10}}
+                        defaultValue="Select Match Hour"
+                        onSelect={(index, option) => {that.setState({selectedTime:option}); this.setState({time:option}); this.select.hide()}}
+                        dropdownTextStyle={{textAlign:'center'}}
+                        textStyle={{color:'#ccc', fontSize:14, marginLeft:10}}
+                        options={options}/>
                 </NB.Item>
             </RN.View>
         )
@@ -135,7 +122,7 @@ export default class ReserveArea extends React.Component{
                     animationType="fade"
                     animated={true}
                     onBackdropPress={() => that.setState({modalVisible: false})}>
-                        <RN.View style={{flex:1, alignItems:'center', alignContent:'center'}}>
+                        <RN.View style={{flex:1, alignItems:'center', alignContent:'center', justifyContent:'center'}}>
                             <NB.Item disabled style={{marginTop:30}}>
                                 <NB.Label>
                                     <NB.Icon style={{fontSize:20,color:"#ccc"}} name="calendar" type="Entypo"/>
@@ -146,7 +133,7 @@ export default class ReserveArea extends React.Component{
                                     maximumDate={new Date(year+1, month, date)}
                                     locale={"tr"}
                                     timeZoneOffsetInMinutes={undefined}
-                                    modalTransparent={true}
+                                    modalTransparent={false}
                                     animationType={"slide"}
                                     androidMode={"default"}
                                     placeHolderText="Select Match Date"
