@@ -14,6 +14,7 @@ import ListFields from './Pages/ListFields';
 import MatchRequest from './Pages/MatchRequest';
 import InviteMatch from './Pages/InviteMatch';
 import TabNavigator from './Pages/TabNavigator';
+import CreateArea from './Pages/CreateArea';
 import Firebase from './Config/Firebase';
 require('firebase/firestore');
 

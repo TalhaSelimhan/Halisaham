@@ -21,6 +21,7 @@ const areaRef = Firebase.firestore().collection('areas');
 
 export default class CreateArea extends React.Component{
     state={
+        district:"",
         areaName:"",
         image:null,
         adress:"",
@@ -74,7 +75,7 @@ export default class CreateArea extends React.Component{
             latitudeDelta:0.001,
             longitudeDelta:0.001},
             loaded:true,});
-            this.setState({x:{longitude:location.longitude,latitude:location.latitude}});
+            this.setState({x:{longitude:location.coords.longitude,latitude:location.coords.latitude}});
       };
     
     
@@ -119,9 +120,26 @@ export default class CreateArea extends React.Component{
 
 
     createArea(){
+        let inputs =this.state;
+        if(inputs.areaName==""){
+            RN.Alert.alert("Create failed","Area name cannot be empty.");
+            return;
+        }
+        else if(inputs.district==""){
+            RN.Alert.alert("Create failed","District name cannot be empty.");
+            return
+        }
+        else if(inputs.contactnumber==""){
+            RN.Alert.alert("Create failed","Contact number name cannot be empty.");
+            return
+        }
+        else if(inputs.image==""){
+            RN.Alert.alert("Create failed","Please upload photo of your pitch.");
+            return
+        }
         let areaid=null;
         areaRef.add({
-            city:"Istanbul",
+            city:"Istanbul / "+this.state.district,
             name:this.state.areaName,
             contact:this.state.contactnumber,
             latitude:this.state.x.latitude,
@@ -154,6 +172,12 @@ export default class CreateArea extends React.Component{
                             </NB.Label>
                             <NB.Input style={{fontSize:18,color:"white"}} value={this.state.areaName} onChangeText={(areaName)=>this.setState({areaName})} autoCapitalize="none" autoCompleteType="username"/>
                         </NB.Item>
+                        <NB.Item floatingLabel>
+                            <NB.Label >
+                                <RN.Text style={styles.labelStyle}>  District Location</RN.Text>
+                            </NB.Label>
+                            <NB.Input style={{fontSize:18,color:"white"}} value={this.state.district} onChangeText={(district)=>this.setState({district})} autoCapitalize="none" autoCompleteType="username"/>
+                        </NB.Item>
                         <NB.Item floatingLabel >
                             <NB.Label>
                                 <RN.Text style={styles.labelStyle}>  Contact Number</RN.Text>
@@ -176,22 +200,12 @@ export default class CreateArea extends React.Component{
                         </RN.View>
                         <RN.View>
                         {this.state.loaded && <MapView
-
+                            
                             style={{width:300,height:300,justifyContent:"center",alignSelf:"center",marginTop:20,borderRadius:40}}
-                            initialRegion={{
-                                latitude:this.state.location.latitude,
-                                longitude:this.state.location.longitude,
-                                latitudeDelta:this.state.location.latitudeDelta,
-                                longitudeDelta:this.state.location.longitudeDelta,
-                            }}>
+                            initialRegion={this.state.location}>
 
                                 <MapView.Marker draggable
-                                coordinate={{
-                                    latitude:this.state.location.latitude,
-                                    longitude:this.state.location.longitude,
-                                    latitudeDelta:this.state.location.latitudeDelta,
-                                    longitudeDelta:this.state.location.longitudeDelta,
-                                }}
+                                coordinate={this.state.location}
                                 onDragEnd={async (e) => {
                                      await this.setState({ x: e.nativeEvent.coordinate });
 
