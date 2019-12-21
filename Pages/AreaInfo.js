@@ -15,10 +15,11 @@ import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
 import ReserveArea from './ReserveArea';
 import MapView from "react-native-maps";
-//import {MapView} from "expo"
 import Firebase from '../Config/Firebase';
 require('firebase/firestore');
 import StarRating from 'react-native-star-rating';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
 
 
 
@@ -42,7 +43,7 @@ class AreaInfo extends React.Component{
                 let area = doc.data();
                 area.id = uid;
                 area.canVote = !area.votes.includes(Firebase.auth().currentUser.uid);
-                that.setState({areadata:area, loaded:true})
+                that.setState({areadata:area})
             }
         })
     }
@@ -55,13 +56,7 @@ class AreaInfo extends React.Component{
         let color = 'rgba('+red.toString()+','+green.toString()+','+blue.toString()+',1)';
         return color;
     }
-    async componentWillMount(){
-        let area = this.props.navigation.getParam('area');
-        if(area){
-            this.setState({areadata:area, loaded:true})
-        }
-        else await this.loadArea(this.props.navigation.getParam('uid'));
-    }
+    
     rateFinish(rating){
         RN.Alert.alert('You gave ' + rating.toString() + ' points', 
                        'Do you confirm this rating', 
@@ -81,8 +76,73 @@ class AreaInfo extends React.Component{
             votes:votes
         })
     }
+
+    _getLocationAsync = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+            errorMessage: 'Permission to access location was denied',
+            });
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        return location.coords;
+    };
+
+    async openMapsApp(){
+        let origin = this.state.userlocation;
+        if(origin){
+            let destination = {latitude:this.state.areadata.latitude, longitude:this.state.areadata.longitude};
+            var scheme = 'https://www.google.com/maps/dir/?api=1&'
+            var url = scheme + `origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}`
+            this.openExternalApp(url)
+        }
+    }
+    
+    openExternalApp(url){
+      RN.Linking.canOpenURL(url).then(supported => {
+        if (supported) {
+            RN.Linking.openURL(url);
+        } else {
+            RN.Alert.alert(
+            'ERROR',
+            'Unable to open: ' + url,
+            [
+              {text: 'OK'},
+            ]
+          );
+        }
+      });
+    }
+
+    getDistance(lat2, lon2){
+        let pi = Math.PI;
+        let lat1 = this.state.areadata.latitude;
+        let lon1 = this.state.areadata.longitude;
+        var R = 6371e3; // metres
+        var φ1 = lat1*(pi/180);
+        var φ2 = lat2*(pi/180);
+        var Δφ = (lat2-lat1)*(pi/180);
+        var Δλ = (lon2-lon1)*(pi/180);
+        var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c;
+        return d;
+    }
+
+    async componentWillMount(){
+        let area = this.props.navigation.getParam('area');
+        if(area){
+            this.setState({areadata:area})
+        }
+        else await this.loadArea(this.props.navigation.getParam('uid'));
+        let location = await this._getLocationAsync();
+        let distance = this.getDistance(location.latitude, location.longitude)
+        this.setState({userlocation:location, loaded:true, distance:distance})
+    }
     render(){
-        let {areadata, loaded, modalVisible} = this.state;
+        let {areadata, modalVisible, distance, loaded} = this.state;
         if(!loaded) return <RN.View/>
         return(
             <RN.View style={{flex:1}}>
@@ -99,7 +159,7 @@ class AreaInfo extends React.Component{
                         <RN.View style={{width:width*0.65, alignItems:'flex-start', justifyContent:'center'}}>
                             <RN.Text style={{fontSize:20, fontWeight:'bold', color:Colors.postBackground}}>{areadata.name}</RN.Text>
                             <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>{areadata.city}</RN.Text>
-                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>4 km away</RN.Text>
+                            <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>{(distance/1000).toFixed(2)} km</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.25, justifyContent:'center'}}>
                             <Button title="RESERVE" onPress={() => this.setState({modalVisible:!modalVisible})}
@@ -125,7 +185,7 @@ class AreaInfo extends React.Component{
                         />
                         <RN.Text style={{textAlign:'center', fontSize:14, fontWeight:'400', color:Colors.headerText}}>{areadata.ratingcount} reviews</RN.Text>
                     </RN.View>
-                    <RN.TouchableOpacity style={styles.thirdSection}>
+                    <RN.TouchableOpacity style={styles.thirdSection} onPress={() => this.openMapsApp()}>
                         <RN.View style={{width:width*.8, height:height*.08, flexDirection:'row', justifyContent:'space-around'}}>
                             <NB.Icon name="location" type="Entypo" style={{fontSize:18, color:Colors.postSubText}}/>
                             <RN.Text style={{color:Colors.postText, fontSize:18, fontWeight:'700', textAlign:'center'}}>Location</RN.Text>
