@@ -82,6 +82,7 @@ export default class ReserveArea extends React.Component{
         this.setState({selectedDate:date})
     }
     sendRequest(){
+        let that = this.props.that;
         let areaid = this.props.areaid;
         let requestid = "";
         let user = Firebase.auth().currentUser;
@@ -104,8 +105,8 @@ export default class ReserveArea extends React.Component{
             status:"Waiting"
         };
         userRef.add(userrequest)
-        RN.Alert.alert('Success!', "Your request is sent to area owner");
-        this.props.that.setState({modalVisible:false})
+        RN.Alert.alert('Success!', "Your request is sent to area owner", 
+                      [{text:'OK', onPress:() => that.setState({modalVisible:false})}]);
     }
     render(){
         let {that} = this.props;
