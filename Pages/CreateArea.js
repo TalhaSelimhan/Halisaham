@@ -133,7 +133,7 @@ export default class CreateArea extends React.Component{
             RN.Alert.alert("Create failed","Contact number name cannot be empty.");
             return
         }
-        else if(inputs.image==""){
+        else if(inputs.image==null){
             RN.Alert.alert("Create failed","Please upload photo of your pitch.");
             return
         }
