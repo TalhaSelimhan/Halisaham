@@ -113,12 +113,6 @@ const ListStack = createStackNavigator({
             header:null
         }
     },
-    ReserveArea:{
-        screen:ReserveArea,
-        navigationOptions:{
-            header:null
-        }
-    }
 })
 
 export default createAppContainer(ListStack);

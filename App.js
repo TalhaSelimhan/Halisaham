@@ -31,7 +31,7 @@ export default class App extends React.Component{
   render(){
     let {signedIn, checked} = this.state;
     return (
-      signedIn ? <TabNavigator/> : checked ? <LoginPage/> : <View/>
+      signedIn ? <ListFields/> : checked ? <LoginPage/> : <View/>
     );
   }
   
