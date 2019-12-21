@@ -11,20 +11,59 @@ const height = window.height;
 const statusBarHeight = Constants.statusBarHeight;
 import Header from '../Components/Header';
 import Button from '../Components/Button';
+import ModalDropdown from 'react-native-modal-dropdown';
+import Firebase from '../Config/Firebase';
+require('firebase/firestore');
 
 export default class RequestPage extends React.Component{
     state={
+        date:"",
         title:"",
         description:"",
-
+        areas:[],
+        loaded:false,
+        options:[],
+        selectedArea:"",
+        opponentID:"",
+        opponentName:"",
+        team:{},
+        loaded:false,
     }
+    
+    createRequest(){
+        var requestRef = Firebase.firestore().collection('matchrequests');
+        requestRef.add({
+            date:this.state.date.toISOString().slice(0,10),
+            description:this.state.description,
+            opponentid:this.state.opponentID,
+            teamid:this.state.team.id,
+            opponentname:this.state.opponentName,
+            teamname:this.state.team.name,
+            title:this.state.title,
+        })
+    }
+    async currentTeam (){ 
+        let that =this
+        Firebase.firestore().collection("teams").where("leaderid","==",Firebase.auth().currentUser.uid).get().then(docs=>docs.forEach(doc=>{
+            that.setState({team:doc.data()});
+            that.setState({team:{...this.state.team,id:doc.id}})
+    }))
+    }
+    async componentWillMount(){
+        await this.currentTeam();
+        this.setState({opponentID:this.props.navigation.getParam("toChallengeId")})
+        this.setState({opponentName:this.props.navigation.getParam("toChallengeName"),loaded:true})
+        RN.Alert.alert(this.state.loaded)
+    }
+
     render(){
         var date = new Date().getDate() //Current Date
         var month = new Date().getMonth() //Current Month
         var year = new Date().getFullYear() //Current Year
+        if(!this.state.loaded) return <RN.View></RN.View>
         return(
             <RN.View style={{flex:1,backgroundColor: Colors.postBackground}}>
-                <Header title="Create a New Request"/>
+                <Header title="Create a New Request" navigation={this.props.navigation}/>
                 <RN.View style={{flex:8}}>
                     <NB.Form>
                         <NB.Item floatingLabel>
@@ -43,10 +82,9 @@ export default class RequestPage extends React.Component{
                         </NB.Item>
                         <NB.Item disabled style={{marginTop:30}}>
                             <NB.Label>
-                                <NB.Icon style={{fontSize:20,color:"#ccc"}} name="users" type="Entypo"/>
+                                <NB.Icon style={{fontSize:20,color:"#ccc"}} name="clock" type="Entypo"/>
                                 <RN.Text style={styles.labelStyle}> Date</RN.Text>
                             </NB.Label>
-
                             <NB.DatePicker
                                 defaultDate={new Date(year, month, date)}
                                 minimumDate={new Date(year-2, month, date)}
@@ -59,27 +97,14 @@ export default class RequestPage extends React.Component{
                                 placeHolderText="Select Match Date"
                                 textStyle={{ color: "white" }}
                                 placeHolderTextStyle={{ color: "#d3d3d3" }}
-                                onDateChange={this.setDate}
+                                onDateChange={(date)=>this.setState({date})}
                                 disabled={false}
                             />
-                        </NB.Item>
-                        <NB.Item rounded style={{alignSelf:"center",borderTopRightRadius:width*.15, borderBottomLeftRadius:width*.15,marginTop:30,marginBottom:30}}>
-                        <   RN.View style={{width:width*.7, height:height*.22, justifyContent:'center', borderTopRightRadius:width*.15, borderBottomLeftRadius:width*.15, overflow:'hidden'}}>
-                                <MapView  style={{height:height*.22, width:width*.7}} 
-                                            pointerEvents="none"
-                                            initialRegion={{
-                                                latitude: 40.8279365,
-                                                longitude: 14.1930611,
-                                                latitudeDelta: 0.010,
-                                                longitudeDelta: 0.010,
-                                            }}
-                                />
-                            </RN.View>
                         </NB.Item>
                     </NB.Form>
                 </RN.View>
                 <RN.View style={{flex:1,justifyContent:"center" ,marginBottom:20,alignItems:"center"}}>
-                    <Button title={"CREATE REQUEST"} />
+                    <Button title={"CREATE REQUEST"} onPress={()=>this.createRequest()} />
                 </RN.View>
             </RN.View>
         )

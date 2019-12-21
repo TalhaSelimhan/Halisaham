@@ -84,6 +84,7 @@ export default class CreateTeam extends React.Component{
             shortname:inputs.shortname,
             founded:new Date().getTime(),
             totalmatches:0,
+            leaderid:Firebase.auth().currentUser.uid,
         }).then(async (doc)=>{
 
             let imageUri= await this.resimYukle(this.state.image,"/teams/"+doc.id);
