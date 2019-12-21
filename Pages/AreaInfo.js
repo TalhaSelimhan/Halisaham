@@ -13,6 +13,7 @@ import * as Rating from "react-native-ratings";
 import MatchHistory from './MatchHistory';
 import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
+import ReserveArea from './ReserveArea';
 import MapView from "react-native-maps";
 //import {MapView} from "expo"
 import Firebase from '../Config/Firebase';
@@ -29,7 +30,7 @@ class AreaInfo extends React.Component{
             show:1,
             areadata:{},
             loaded:false,
-            ratingcolor: '#fff'
+            modalVisible:false,
         }
     }
 
@@ -39,6 +40,7 @@ class AreaInfo extends React.Component{
         areaRef.get().then(doc => {
             if(doc.exists){
                 let area = doc.data();
+                area.id = uid;
                 area.canVote = !area.votes.includes(Firebase.auth().currentUser.uid);
                 that.setState({areadata:area, loaded:true})
             }
@@ -80,10 +82,11 @@ class AreaInfo extends React.Component{
         })
     }
     render(){
-        let {areadata, loaded} = this.state;
+        let {areadata, loaded, modalVisible} = this.state;
         if(!loaded) return <RN.View/>
         return(
             <RN.View style={{flex:1}}>
+                <ReserveArea modalVisible={modalVisible} that={this} areaid={this.state.areadata.id}/>
                 <RN.View style={styles.imageView}>
                     <RN.Image source={{uri:areadata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>
@@ -99,7 +102,7 @@ class AreaInfo extends React.Component{
                             <RN.Text style={{fontSize:12, fontWeight:'200', color:Colors.locationBackground}}>4 km away</RN.Text>
                         </RN.View>
                         <RN.View style={{width:width*0.25, justifyContent:'center'}}>
-                            <Button title="RESERVE" onPress={() => this.props.navigation.navigate('ReserveArea')}
+                            <Button title="RESERVE" onPress={() => this.setState({modalVisible:!modalVisible})}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.25, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <RN.View>
