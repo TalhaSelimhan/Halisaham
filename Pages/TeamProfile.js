@@ -10,9 +10,13 @@ const Screen = RN.Dimensions.get("screen");
 const height = Window.height;
 const width = Window.width;
 import TeamMatchHistory from './TeamMatchHistory';
+import {createStackNavigator} from "react-navigation-stack";
+import {createAppContainer} from "react-navigation";
 import TeamSquad from './TeamSquad';
 import Firebase from "../Config/Firebase";
+import MatchRequest from "./MatchRequest";
 require('firebase/firestore');
+
 
 class TeamProfile extends React.Component{
     constructor(props){
@@ -28,6 +32,7 @@ class TeamProfile extends React.Component{
         teamsRef.get().then(doc => {
             if(doc.exists){
                 that.setState({teamdata:doc.data()})
+                that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
             }
         })
     }
@@ -37,6 +42,7 @@ class TeamProfile extends React.Component{
     }
     render(){
         let {teamdata} = this.state;
+        let {navigation} = this.props;
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>
@@ -55,6 +61,7 @@ class TeamProfile extends React.Component{
                         </RN.View>
                         <RN.View style={{width:width*0.30, justifyContent:'space-around'}}>
                             <Button title="CHALLENGE"
+                                    onPress={() => navigation.navigate('ChallengePage', {toChallengeId:teamdata.id, toChallengeName:teamdata.name})}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.3, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <Button title={this.state.show == 1 ? 'SQUAD' : 'MATCHES'}
@@ -74,6 +81,22 @@ class TeamProfile extends React.Component{
 }
 
 
+const TeamStack = createStackNavigator({
+    TeamProfile:{
+        screen:TeamProfile,
+        navigationOptions:{
+            header:null
+        }
+    },
+    ChallengePage:{
+        screen:MatchRequest,
+        navigationOptions:{
+            header:null
+        }
+    }
+})
+
+export default createAppContainer(TeamStack);
 
 
 
@@ -153,6 +176,3 @@ const styles = RN.StyleSheet.create({
         overflow:'hidden'
     }
 })
-
-
-export default TeamProfile;
