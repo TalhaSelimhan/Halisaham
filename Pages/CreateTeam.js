@@ -13,6 +13,9 @@ const width = Window.width;
 import { black } from "ansi-colors";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import Firebase from "../Config/Firebase";
+require('firebase/firestore');
+const teamRef = Firebase.firestore().collection('teams');
 
 
 
@@ -23,6 +26,73 @@ export default class CreateTeam extends React.Component{
         shortname: "",
         contactnumber:null,
         description:"",
+        district:"",
+    }
+    async resimYukle(uri, resimYolu) {
+        const blob = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            resolve(xhr.response);
+          };
+          xhr.onerror = function(e) {
+            console.log(e);
+            reject(new TypeError('Network request failed'));
+          };
+          xhr.responseType = 'blob';
+          xhr.open('GET', uri, true);
+          xhr.send(null);
+        });
+        const ref = Firebase.storage().ref().child(resimYolu);
+        const snapshot = await ref.put(blob);
+      
+        blob.close();
+        let url = await snapshot.ref.getDownloadURL();
+        return url;
+      }
+    
+    createTeam(){
+        let inputs =this.state;
+        if(inputs.teamname==""){
+            RN.Alert.alert("Create failed","Team name cannot be empty.");
+            return;
+        }
+        else if(inputs.shortname==""){
+            RN.Alert.alert("Create failed","Short name cannot be empty.");
+            return
+        }
+        if(inputs.teamname.length>20){
+            RN.Alert.alert("Create failed","Team name cannot be longer than 20.");
+            return;
+        }
+        else if(inputs.shortname.length>4){
+            RN.Alert.alert("Create failed","Short name cannot be longer than 4.");
+            return
+        }
+        else if(inputs.contactnumber==""){
+            RN.Alert.alert("Create failed","Contact number name cannot be empty.");
+            return
+        }
+        else if(inputs.image==null){
+            RN.Alert.alert("Create failed","Please upload a logo.");
+            return
+        }
+        let teamid=null;
+        teamRef.add({
+            city:"Istanbul / "+this.state.district,
+            name:this.state.teamname,
+            contact:this.state.contactnumber,
+            shortname:inputs.shortname,
+            founded:new Date().getTime(),
+            totalmatches:0,
+        }).then(async (doc)=>{
+
+            let imageUri= await this.resimYukle(this.state.image,"/teams/"+doc.id);
+            teamRef.doc(doc.id).update({
+                photourl:imageUri
+            });    
+        });
+        
+
     }
 
     componentDidMount() {
@@ -51,9 +121,6 @@ export default class CreateTeam extends React.Component{
         this.setState({ image: result.uri });
         }
     }
-    checkValid(){
-
-    }
     render(){
         let image = this.state.image
         return(
@@ -72,9 +139,15 @@ export default class CreateTeam extends React.Component{
                             <NB.Label>
                                 <NB.Icon style={{fontSize:20,color:"#ccc"}} name="tournament" type="MaterialCommunityIcons"/>
                                 <RN.Text style={styles.labelStyle}>  Short Name</RN.Text>
-                                <RN.Text>{this.state.shortname}</RN.Text>
                             </NB.Label>
                             <NB.Input style={{fontSize:18,color:"white"}} value={this.state.shortname} onChangeText={(shortname)=>this.setState({shortname})} autoCapitalize="none"/>
+                        </NB.Item>
+                        <NB.Item floatingLabel >
+                            <NB.Label>
+                                <NB.Icon style={{fontSize:20,color:"#ccc"}} name="home" type="MaterialCommunityIcons"/>
+                                <RN.Text style={styles.labelStyle}>  District</RN.Text>
+                            </NB.Label>
+                            <NB.Input style={{fontSize:18,color:"white"}} value={this.state.district} onChangeText={(district)=>this.setState({district})} autoCapitalize="none"/>
                         </NB.Item>
                         <NB.Item floatingLabel >
                             <NB.Label>
@@ -95,7 +168,7 @@ export default class CreateTeam extends React.Component{
                     </NB.Form>
                 </RN.View>
                 <RN.View style={{flex:1,justifyContent:"center" ,marginBottom:20,alignItems:"center"}}>
-                    <Button title={"CREATE TEAM"} />
+                    <Button title={"CREATE TEAM"} onPress={()=>this.createTeam()} />
                 </RN.View>
             </RN.View>
         )
