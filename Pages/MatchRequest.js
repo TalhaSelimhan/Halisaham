@@ -49,8 +49,8 @@ export default class RequestPage extends React.Component{
 
                             <NB.DatePicker
                                 defaultDate={new Date(year, month, date)}
-                                minimumDate={new Date(year, month, date)}
-                                maximumDate={new Date(year+1, month, date)}
+                                minimumDate={new Date(year-2, month, date)}
+                                maximumDate={new Date(year+2, month, date)}
                                 locale={"tr"}
                                 timeZoneOffsetInMinutes={undefined}
                                 modalTransparent={false}
