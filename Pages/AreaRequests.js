@@ -18,25 +18,51 @@ import Loading from '../Components/Loading';
 require('firebase/firestore');
 
 
-class Field extends React.Component{
+class Request extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            request:props.request
+        }
+    }
+    getStatusColor(status){
+        if(status == "Accepted") return "#FFFF75"
+        else if(status == "Rejected") return "#FF7575"
+    }
+    sendResponse(status){
+        let requestid = this.state.request.id;
+        let requestRef = Firebase.firestore().collection('arearequests').doc(requestid);
+        requestRef.update({
+            status:status
+        })
+        this.setState({request:{...this.state.request, status:status}});
+    }
+    changeStatus(){
+        let {request} = this.state;
+        let message = `${request.sendername} wants to reserve your area on ${request.date} at ${request.time}`;
+        RN.Alert.alert('You have a waiting request', message, 
+                [{text:'Reject', style:'destructive', onPress:() => this.sendResponse("Rejected")},
+                 {text:'Wait', style:'default'},
+                 {text:'Accept', style:'default', onPress:() => this.sendResponse("Accepted")}]);
+        
+    }
     render(){
-        var {field, navigation} = this.props;
+        var {request} = this.state;
         return(
-            <RN.TouchableOpacity style={styles.FieldRowView} onPress={() => navigation.navigate('AreaInfo', {uid:field.id})}>
+            <RN.TouchableOpacity style={styles.FieldRowView} onPress={() => {if(request.status == "Waiting") this.changeStatus();}}>
                 <RN.View style={styles.FieldHeader}>
-                    <RN.Text style={styles.FieldHeaderText}>{field.name}</RN.Text>
-                    <NB.Icon style={{color:'#eee'}} name="chevron-right" type="Entypo"/>
+                    <RN.Text style={styles.FieldHeaderText}>Request From {request.sendername}</RN.Text>
                 </RN.View>  
                 <RN.View style={styles.InfoField}>
                     <RN.View style={{flex:1}}>
-                        <RN.Text style={styles.InfoLabel}>Location</RN.Text>
-                        <RN.Text style={styles.InfoLabel}>Rating</RN.Text>
-                        <RN.Text style={styles.InfoLabel}>Contact</RN.Text>
+                        <RN.Text style={styles.InfoLabel}>Date</RN.Text>
+                        <RN.Text style={styles.InfoLabel}>Time</RN.Text>
+                        <RN.Text style={styles.InfoLabel}>Status</RN.Text>
                     </RN.View>
                     <RN.View style={{flex:1}}>
-                        <RN.Text style={styles.InfoText}>{field.city}</RN.Text>
-                        <RN.Text style={styles.InfoText}>{field.rating} ({field.ratingcount})</RN.Text>
-                        <RN.Text style={styles.InfoText}>{field.contact}</RN.Text>
+                        <RN.Text style={styles.InfoText}>{request.date}</RN.Text>
+                        <RN.Text style={styles.InfoText}>{request.time}</RN.Text>
+                        <RN.Text style={{...styles.InfoText, color:this.getStatusColor(request.status)}}>{request.status}</RN.Text>
                     </RN.View>
                 </RN.View>
             </RN.TouchableOpacity>
@@ -45,36 +71,42 @@ class Field extends React.Component{
 }
 
 
-class ListFields extends React.Component{
+class ListRequests extends React.Component{
     state={
-        areas:[],
+        requests:[],
         loaded:false
     }
-    async loadAreas(){
+    async loadRequests(){
         let that = this;
-        let areas = [];
-        let areasRef = Firebase.firestore().collection('areas');
+        let requests = [];
+        let areaid = null;
+        let areasRef = Firebase.firestore().collection('areas').where('owneruid', '==', Firebase.auth().currentUser.uid);
         await areasRef.get().then(snapshot => {
             snapshot.docs.forEach(doc => {
-                let area = doc.data();
-                area.id = doc.id;
-                areas.push(area);
+                areaid = doc.id;
             })
         })
-        this.setState({areas:areas, loaded:true});
+        let requestRef = Firebase.firestore().collection('arearequests').where('areaid', '==', areaid);
+        requestRef.get().then(snapshot => {
+            snapshot.docs.forEach(doc => {
+                let request = doc.data();
+                request.id = doc.id;
+                requests.push(request);
+            })
+        }).then(() => that.setState({requests:requests, loaded:true}))
     }
     async componentWillMount(){
-        await this.loadAreas();
+        await this.loadRequests();
     }
     render(){
-        let {areas, loaded} = this.state;
-        if(!loaded) return <Loading extra={true} extraText="Areas are being fetched for you"/>
+        let {requests, loaded} = this.state;
+        if(!loaded) return <Loading extra={true} extraText="Your requests are on way!"/>
         return(
             <RN.View style={styles.FieldsListView}>
-                <Header title="Fields" navigation={this.props.navigation} drawer={true}/>
+                <Header title="Requests" navigation={this.props.navigation} drawer={true}/>
                 <RN.FlatList 
-                    data={areas}
-                    renderItem={item => <Field field={item.item} navigation={this.props.navigation}/>}
+                    data={requests}
+                    renderItem={item => <Request request={item.item}/>}
                     keyExtractor={item => item.id}
                 />
             </RN.View>
@@ -84,7 +116,7 @@ class ListFields extends React.Component{
 
 const ListStack = createStackNavigator({
     List:{
-        screen:ListFields,
+        screen:ListRequests,
         navigationOptions:{
             header:null,
         }

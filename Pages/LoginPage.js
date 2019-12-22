@@ -12,6 +12,7 @@ import now from "performance-now";
 import PlayerProfile from "./PlayerProfile";
 import TeamProfile from "./TeamProfile";
 import AreaInfo from "./AreaInfo";
+import AreaOwnerApp from "./AreaOwnerApp";
 import TabNavigator from "./TabNavigator";
 import CreateArea from "./CreateArea";
 import Firebase from "../Config/Firebase";
@@ -58,12 +59,17 @@ class LoginPage extends React.Component{
         let inputs = this.state;
         let navigation = this.props.navigation;
         try{
-            Firebase.auth().signInWithEmailAndPassword(inputs.email, inputs.password).then(function(user) {
+            Firebase.auth().signInWithEmailAndPassword(inputs.email, inputs.password).then(async function(user) {
                 if(!user.user.emailVerified){
                     RN.Alert.alert('Authentication required', 'Please check and verify your email');
                     return;
                 }
-                navigation.navigate('TabBar', {useruid:user.user.uid});
+                let isareaowner = false;
+                await Firebase.firestore().collection('users').doc(user.user.uid).get().then(doc => {
+                    isareaowner = doc.data().isareaowner;
+                    if(isareaowner) navigation.navigate('AreaApp');
+                    else navigation.navigate('UserApp'); 
+                })
                 return;
             }).catch(error => RN.Alert.alert(error.code, error.message))
         }catch(error){
@@ -289,9 +295,9 @@ const LandingNavigator = createStackNavigator(
                     header:null
             }
         },
-        "TabBar":{
-            screen:TabNavigator,
-            title:'Tab Navigator',
+        "UserApp":{
+            screen:({navigation}) => <TabNavigator screenProps={{rootNavigation:navigation}}/>,
+            title:'User App',
             navigationOptions:{
                 header:null
             }
@@ -299,6 +305,13 @@ const LandingNavigator = createStackNavigator(
         "Create Area":{
             screen:CreateArea,
             title:'Create Area',
+            navigationOptions:{
+                header:null
+            }
+        },
+        "AreaApp":{
+            screen:AreaOwnerApp,
+            title:'Area App',
             navigationOptions:{
                 header:null
             }

@@ -5182,6 +5182,13 @@ react-native-improved-text-input@^0.0.1:
   resolved "https://registry.yarnpkg.com/react-native-improved-text-input/-/react-native-improved-text-input-0.0.1.tgz#ff6f2c77ce86c12d55d7c34a8941bd8cf1443b42"
   integrity sha512-va5Wgj8SYvUqn/WraYH1npmTWb8gjknHUFYbSNMw7dneZZRPSq6Uzku7wCiAhk6psIEljOUFobi0wmripOfoFQ==
 
+react-native-indicators@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.17.0.tgz#92f95efaf5fb53be576dfe4e1980a25655a93f55"
+  integrity sha512-s23em477GHGxWeGczWrixScAZD6tQU4mx1fttlrwhEGKOxhBgp55Kh3RoD9Wj4yna4e5W35xQNoPqoJAT6QW5A==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"

@@ -9,6 +9,7 @@ const window = RN.Dimensions.get("window");
 const width = window.width;
 const height = window.height;
 const statusBarHeight = Constants.statusBarHeight;
+import Loading from '../Components/Loading';
 
 
 class Post extends React.Component{

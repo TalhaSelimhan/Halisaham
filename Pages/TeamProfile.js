@@ -15,6 +15,7 @@ import {createAppContainer} from "react-navigation";
 import TeamSquad from './TeamSquad';
 import Firebase from "../Config/Firebase";
 import MatchRequest from "./MatchRequest";
+import Loading from '../Components/Loading';
 require('firebase/firestore');
 
 

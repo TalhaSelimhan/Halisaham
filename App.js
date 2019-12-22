@@ -15,7 +15,9 @@ import MatchRequest from './Pages/MatchRequest';
 import InviteMatch from './Pages/InviteMatch';
 import TabNavigator from './Pages/TabNavigator';
 import AreaOwnerApp from './Pages/AreaOwnerApp';
+import AreaRequests from './Pages/AreaRequests';
 import CreateArea from './Pages/CreateArea';
+import Loading from "./Components/Loading";
 import Firebase from './Config/Firebase';
 require('firebase/firestore');
 
@@ -25,23 +27,29 @@ export default class App extends React.Component{
     this.state = {
       signedIn:false,
       checked:false,
+      isareaowner:false,
     }
   }
   async componentWillMount(){
     let isareaowner = false;
     let that = this;
     await Firebase.auth().onAuthStateChanged(async (user) => {
-      if(user && user.emailVerified) this.setState({signedIn: true}); 
-      await Firebase.firestore().collection('users').doc(user.uid).get().then(doc => {
-        isareaowner = doc.data().isareaowner;
-      })
-      await that.setState({isareaowner:isareaowner, checked:true});
+      if(user && user.emailVerified) {
+        this.setState({signedIn: true}); 
+        await Firebase.firestore().collection('users').doc(user.uid).get().then(doc => {
+          isareaowner = doc.data().isareaowner;
+        })
+        await that.setState({isareaowner:isareaowner, checked:true});
+      }
+      this.setState({checked:true})
     });
     
   }
   render(){
     let {signedIn, checked, isareaowner} = this.state;
-    return !checked ? <View/> : signedIn ? isareaowner ? <AreaOwnerApp/> : <TabNavigator/> : <LoginPage/>
+    return !checked ? <Loading extra={true} extraText="App is being prepared for you"/> : 
+            !signedIn ? <LoginPage/> :
+              !isareaowner ?  <TabNavigator/> : <AreaOwnerApp/>
   }
 }
 

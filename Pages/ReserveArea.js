@@ -81,30 +81,23 @@ export default class ReserveArea extends React.Component{
     setDate(date){
         this.setState({selectedDate:date})
     }
-    sendRequest(){
+    async sendRequest(){
         let that = this.props.that;
         let areaid = this.props.areaid;
+        let areaname = this.props.areaname;
         let requestid = "";
         let user = Firebase.auth().currentUser;
-        let requestRef = Firebase.firestore().collection('areas').doc(areaid).collection('requests');
-        let userRef = Firebase.firestore().collection('users').doc(user.uid).collection('requests');
+        let requestsRef = Firebase.firestore().collection('arearequests');
         let arearequest = {
-            requestowner:user.displayName,
-            requestowneruid:user.uid,
-            time:this.state.selectedTime,
-            date:this.state.selectedDate.toISOString().slice(0,10),
-            status:"Waiting"
-        };
-        requestRef.add(arearequest).then(doc => requestid = doc.id)
-        let userrequest = {
-            requestid:requestid,
-            areaname:this.props.that.state.areadata.name,
             areaid:areaid,
+            areaname:areaname,
+            senderid:user.uid,
+            sendername:user.displayName,
             time:this.state.selectedTime,
             date:this.state.selectedDate.toISOString().slice(0,10),
             status:"Waiting"
         };
-        userRef.add(userrequest)
+        await requestsRef.add(arearequest)
         RN.Alert.alert('Success!', "Your request is sent to area owner", 
                       [{text:'OK', onPress:() => that.setState({modalVisible:false})}]);
     }

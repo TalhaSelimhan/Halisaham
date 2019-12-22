@@ -15,7 +15,9 @@ import PlayerTeams from './PlayerTeams';
 import PlayerStats from "./PlayerStats";
 import colors from "../Config/Colors";
 import Firebase from "../Config/Firebase";
+import Loading from '../Components/Loading';
 require('firebase/firestore');
+
 
 
 
@@ -25,7 +27,8 @@ class PlayerProfile extends React.Component{
         super(props);
         this.state={
             show:1,
-            playerdata:{}
+            playerdata:{},
+            loaded:false
         }
     }
     async loadPlayer(uid){
@@ -33,7 +36,7 @@ class PlayerProfile extends React.Component{
         let userRef = Firebase.firestore().collection('users').doc(uid);
         userRef.get().then(doc => {
             if(doc.exists){
-                that.setState({playerdata:doc.data()})
+                that.setState({playerdata:doc.data(), loaded:true})
             }
         })
     }
@@ -44,7 +47,8 @@ class PlayerProfile extends React.Component{
     }
 
     render(){
-        let {playerdata} = this.state;
+        let {playerdata, loaded} = this.state;
+        if(!loaded) return <Loading extra={true} extraText="Profile informations are coming right now"/>
         return(
             <RN.View style={{flex:1}}>
                 <RN.View style={styles.imageView}>

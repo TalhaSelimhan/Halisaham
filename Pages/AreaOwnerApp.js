@@ -13,6 +13,7 @@ import ListTeams from "./ListTeams";
 import ListFields from "./ListFields";
 import CreateTeam from "./CreateTeam";
 import AreaInfo from "./AreaInfo";
+import AreaRequests from './AreaRequests';
 import {createStackNavigator} from 'react-navigation-stack'
 import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
 import Firebase from "../Config/Firebase";
@@ -22,15 +23,6 @@ const height = Screen.height;
 const width = Screen.width;
 
 
-
-  const MatchesPage = createStackNavigator({
-    Home: {
-          screen:ListMatches,
-          navigationOptions:{
-              header:null,
-          }
-    }
-  });
 
   const CustomDrawerComponent= (props) =>{
       let photourl = Firebase.auth().currentUser.photoURL;
@@ -46,7 +38,8 @@ const width = Screen.width;
           <ScrollView>
             <DrawerItems  {...props}  itemStyle={{borderRadius:100,margin:5,alignSelf:"flex-start"}} activeBackgroundColor={Colors.postBackground} />
           </ScrollView>
-          <TouchableOpacity style={{marginBottom:20, flexDirection:'row', padding:8, marginHorizontal:40,borderRadius:100, backgroundColor:Colors.postBackground, justifyContent:'space-around'}} onPress={async ()=>await Firebase.auth().signOut()}>
+          <TouchableOpacity style={{marginBottom:20, flexDirection:'row', padding:8, marginHorizontal:40,borderRadius:100, backgroundColor:Colors.postBackground, justifyContent:'space-around'}} 
+                            onPress={async ()=>{await Firebase.auth().signOut();}}>
                 <NB.Icon name="poweroff" type="AntDesign" style={{fontSize:24,color:"#d45675"}}/>
                 <Text style={{fontSize:16, color:'#d45675', letterSpacing:1.5, fontWeight:'500', textAlign:'center'}}>Sign Out</Text>
           </TouchableOpacity>
@@ -56,11 +49,11 @@ const width = Screen.width;
   }
 
 const AreaOwnerApp = createDrawerNavigator({
-    "My Area": {
+    "Area": {
       screen: AreaInfo,
     },
-    "Matches": {
-        screen: MatchesPage,
+    "Requests": {
+        screen: AreaRequests,
     }
   },
   {

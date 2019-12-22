@@ -16,6 +16,7 @@ import PlayerStats from "./PlayerStats";
 import ReserveArea from './ReserveArea';
 import MapView from "react-native-maps";
 import Firebase from '../Config/Firebase';
+import Loading from '../Components/Loading';
 require('firebase/firestore');
 import StarRating from 'react-native-star-rating';
 import * as Permissions from 'expo-permissions';
@@ -94,10 +95,11 @@ class AreaInfo extends React.Component{
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
-            errorMessage: 'Permission to access location was denied',
+                errorMessage: 'Permission to access location was denied',
             });
         }
         let location = await Location.getCurrentPositionAsync({});
+        await this.setState({userlocation:location.coords});
         return location.coords;
     };
 
@@ -148,11 +150,9 @@ class AreaInfo extends React.Component{
         let area = this.props.navigation.getParam('area');
         let uid = this.props.navigation.getParam('uid');
         if(area){
-            RN.Alert.alert('Area from nav is not null')
             this.setState({areadata:area, isareaowner:false})
         }
         else if(uid){
-            RN.Alert.alert('Uid from nav is not null')
             await this.loadArea(uid, false);
             this.setState({isareaowner:false})
         }
@@ -161,15 +161,15 @@ class AreaInfo extends React.Component{
             this.setState({isareaowner:true})
         }
         let location = await this._getLocationAsync();
-        let distance = this.getDistance(location.latitude, location.longitude)
-        this.setState({userlocation:location, distance:distance, loaded:true})
+        let distance = this.getDistance(location.latitude, location.longitude);
+        this.setState({userlocation:location, distance:distance, loaded:true});
     }
     render(){
-        let {areadata, modalVisible, distance, loaded, isareaowner} = this.state;
-        if(!loaded) return <RN.View/>
+        let {areadata, modalVisible, distance, isareaowner, loaded} = this.state;
+        if(!loaded) return <Loading extra={true} extraText="Area Info is being prepared for you"/>
         return(
             <RN.View style={{flex:1}}>
-                <ReserveArea modalVisible={modalVisible} that={this} areaid={this.state.areadata.id}/>
+                <ReserveArea modalVisible={modalVisible} that={this} areaid={this.state.areadata.id} areaname={this.state.areadata.name}/>
                 <RN.View style={styles.imageView}>
                     <RN.Image source={{uri:areadata.photourl}}
                               style={{width:width, height:height*0.45, resizeMode:'cover', left:0, right:0, position:"absolute"}}/>

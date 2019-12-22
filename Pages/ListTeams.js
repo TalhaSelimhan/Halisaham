@@ -15,6 +15,7 @@ require('firebase/firestore');
 import TeamProfile from "./TeamProfile";
 import ReserveArea from "./ReserveArea";
 import Header from "../Components/Header";
+import Loading from '../Components/Loading';
 
 class Item extends React.Component{
     render(){
@@ -91,7 +92,7 @@ class ListTeams extends React.Component{
                 }
                     keyExtractor={(item) => item.id}
                     
-                /> : <RN.View/>}
+                /> : <Loading extra={true} extraText="Team list will be available in a few seconds"/>}
                 
                 
             </RN.View>
