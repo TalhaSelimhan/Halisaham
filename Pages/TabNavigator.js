@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import {View,Text,TouchableOpacity,SafeAreaView,Dimensions,ScrollView} from "react-native";
+import {View,Text,TouchableOpacity,SafeAreaView,Dimensions,ScrollView,Alert} from "react-native";
 import * as NB from "native-base";
 import * as RNE from "react-native-elements";
 import {createAppContainer} from "react-navigation";
@@ -8,10 +8,12 @@ import Colors from "../Config/Colors";
 import Button from "../Components/Button";
 import Constants from "expo-constants";
 import PlayerProfile from "./PlayerProfile";
+import TeamProfile from "./TeamProfile";
 import ListMatches from "./ListMatches";
 import ListTeams from "./ListTeams";
 import ListFields from "./ListFields";
 import CreateTeam from "./CreateTeam";
+import TeamLeaderRequests from "./TeamLeaderRequests";
 import AreaInfo from "./AreaInfo";
 import {createStackNavigator} from 'react-navigation-stack'
 import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
@@ -20,6 +22,7 @@ require('firebase/firestore');
 const Screen = Dimensions.get("screen");
 const height = Screen.height;
 const width = Screen.width;
+
 
 const PlayerPage = createStackNavigator({
   Home: {
@@ -54,10 +57,28 @@ const TeamsPage = createStackNavigator({
           }
     }
   });
+  const TeamRequests = createStackNavigator({
+    Home: {
+          screen:TeamLeaderRequests,
+          navigationOptions:{
+              header:null,
+          }
+    }
+  });
+  const TeamProfilePage = createStackNavigator({
+    Home: {
+          screen:TeamProfile,
+          navigationOptions:{
+              header:null,
+          }
+    }
+  });
 
-  const CustomDrawerComponent= (props) =>{
+
+const CustomDrawerComponent= (props) =>{
       let photourl = Firebase.auth().currentUser.photoURL;
       let name = Firebase.auth().currentUser.displayName;
+
       return(
         <View style={{flex:1, backgroundColor:Colors.backgroundGreen}}>
           <View style={{height:height*.25,backgroundColor:Colors.sideBarHeaderBackground, alignContent:'center', alignItems:'center', justifyContent:'center'}}>
@@ -93,7 +114,7 @@ const MyDrawerNavigator = createDrawerNavigator({
     },
     "Create Team":{
         screen:CreateTeam
-    }
+    },
   },
   {
     contentComponent:CustomDrawerComponent,
@@ -104,9 +125,60 @@ const MyDrawerNavigator = createDrawerNavigator({
 }
 );
 
+const TeamLeader = createDrawerNavigator({
+  "Player Profile": {
+    screen: PlayerPage,
+  },
+  Teams: {
+    screen: TeamsPage,
+  },
+  Fields: {
+      screen: FieldsPage,
+  },
+  "Matches": {
+      screen: MatchesPage,
+  },
+  "Team Profile":{
+      screen:TeamProfilePage,
+  },
+  "Match Requests":{
+      screen:TeamRequests,
+  }
+},
+{
+  contentComponent:CustomDrawerComponent,
+  contentOptions: {
+    activeTintColor: "white",
+  },
+  drawerWidth:width*0.65
+}
+);
 
-export default createAppContainer(MyDrawerNavigator);
+const Contain = createAppContainer(MyDrawerNavigator);
+const TeamLead = createAppContainer(TeamLeader);
 
+export default class TabNavigator extends React.Component{
+  state={
+    deneme:false,
+  }
+  componentWillMount(){
+    this.isTeamLeader();
+  }
+  async isTeamLeader(){
+    let teamRef = Firebase.firestore().collection('users').doc(Firebase.auth().currentUser.uid);
+    let teamid={}
+    await teamRef.get().then(docs => {
+        teamid=docs.data()
+    });
+    this.setState({deneme:teamid.hasteam})
+  }
+  render(){
+    if(this.state.deneme) return(<TeamLead/>);
+    return(
+      <Contain/>
+    )
+  }
+}
 
 
 

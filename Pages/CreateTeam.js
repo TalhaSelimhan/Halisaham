@@ -77,6 +77,7 @@ export default class CreateTeam extends React.Component{
             return
         }
         let teamid=null;
+        Firebase.firestore.collection("users").doc(Firebase.auth().currentUser.uid).update({hasteam:true})
         teamRef.add({
             city:"Istanbul / "+this.state.district,
             name:this.state.teamname,

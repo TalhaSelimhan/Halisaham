@@ -160,6 +160,7 @@ class SignUpPage extends React.Component{
                     username:inputs.username
                 })
                 usersRef.doc(user.user.uid).set({
+                    hasteam:false,
                     fullname:inputs.fullname,
                     age:inputs.age,
                     username:inputs.username,

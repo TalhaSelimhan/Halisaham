@@ -40,6 +40,7 @@ export default class RequestPage extends React.Component{
             opponentname:this.state.opponentName,
             teamname:this.state.team.name,
             title:this.state.title,
+            status:"Waiting",
         })
     }
     async currentTeam (){ 
