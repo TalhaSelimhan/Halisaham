@@ -16,7 +16,6 @@ import AreaOwnerApp from "./AreaOwnerApp";
 import TabNavigator from "./TabNavigator";
 import CreateArea from "./CreateArea";
 import Firebase from "../Config/Firebase";
-
 require('firebase/firestore');
 const usersRef = Firebase.firestore().collection('users');
 
@@ -64,13 +63,6 @@ class LoginPage extends React.Component{
                     RN.Alert.alert('Authentication required', 'Please check and verify your email');
                     return;
                 }
-                let isareaowner = false;
-                await Firebase.firestore().collection('users').doc(user.user.uid).get().then(doc => {
-                    isareaowner = doc.data().isareaowner;
-                    if(isareaowner) navigation.navigate('AreaApp');
-                    else navigation.navigate('UserApp'); 
-                })
-                return;
             }).catch(error => RN.Alert.alert(error.code, error.message))
         }catch(error){
             RN.Alert.alert(error.code, error.message);
@@ -296,13 +288,6 @@ const LandingNavigator = createStackNavigator(
                     header:null
             }
         },
-        "UserApp":{
-            screen:({navigation}) => <TabNavigator screenProps={{rootNavigation:navigation}}/>,
-            title:'User App',
-            navigationOptions:{
-                header:null
-            }
-        },
         "Create Area":{
             screen:CreateArea,
             title:'Create Area',
@@ -310,18 +295,11 @@ const LandingNavigator = createStackNavigator(
                 header:null
             }
         },
-        "AreaApp":{
-            screen:AreaOwnerApp,
-            title:'Area App',
-            navigationOptions:{
-                header:null
-            }
-        }
     },
 );
 
 const styles = RN.StyleSheet.create({
-    labelStyle: {
+    labelStyle:{
       color:'#ccc', 
       fontSize:14, 
       letterSpacing:1.5

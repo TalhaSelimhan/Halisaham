@@ -41,6 +41,9 @@ export default class App extends React.Component{
         })
         await that.setState({isareaowner:isareaowner, checked:true});
       }
+      else{
+        await this.setState({signedIn: false}); 
+      }
       this.setState({checked:true})
     });
     
