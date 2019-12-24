@@ -73,7 +73,8 @@ class Request extends React.Component{
 export default class ListRequests extends React.Component{
     state={
         requests:[],
-        loaded:false
+        loaded:false,
+        refresh:false,
     }
     async loadRequests(){
         let that = this;
@@ -93,7 +94,7 @@ export default class ListRequests extends React.Component{
                 request.id = doc.id;
                 requests.push(request);
             })
-        }).then(() => that.setState({requests:requests, loaded:true}))
+        }).then(() => that.setState({requests:requests,refresh:false, loaded:true}))
     }
     async componentWillMount(){
         await this.loadRequests();
@@ -105,6 +106,12 @@ export default class ListRequests extends React.Component{
             <RN.View style={styles.FieldsListView}>
                 <Header title="Requests" navigation={this.props.navigation} drawer={true}/>
                 <RN.FlatList 
+                    refreshing={this.state.refresh}
+                    onRefresh={async ()=>{
+                        await this.setState({refresh:true})
+                        await this.loadRequests()
+                    }}
+                    
                     data={requests}
                     renderItem={item => <Request request={item.item}/>}
                     keyExtractor={item => item.id}

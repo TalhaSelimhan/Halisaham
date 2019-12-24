@@ -54,7 +54,6 @@ export default class RequestPage extends React.Component{
         await this.currentTeam();
         this.setState({opponentID:this.props.navigation.getParam("toChallengeId")})
         this.setState({opponentName:this.props.navigation.getParam("toChallengeName"),loaded:true})
-        RN.Alert.alert(this.state.loaded)
     }
 
     render(){
