@@ -5,28 +5,35 @@ import * as NB from "native-base";
 import Constants from 'expo-constants';
 import Header from "../Components/Header";
 import Colors from "../Config/Colors";
+import CreateMatchPost from './CreateMatchPost';
 const window = RN.Dimensions.get("window");
 const width = window.width;
 const height = window.height;
 const statusBarHeight = Constants.statusBarHeight;
 import Loading from '../Components/Loading';
+import Firebase from "../Config/Firebase";
+require('firebase/firestore');
 
 
 class Post extends React.Component{
     render(){
-        var {labels, post, title} = this.props;
+        var {match} = this.props;
         return(
             <RN.View style={styles.MatchPostView}>
                 <RN.View style={styles.PostHeader}>
-                    <RN.Text style={{color:'#ccc', fontSize:16, letterSpacing:2, fontWeight:'500'}}>{title}</RN.Text>
+                    <RN.Text style={{color:'#ccc', fontSize:16, letterSpacing:2, fontWeight:'500'}}>{match.title}</RN.Text>
                     <NB.Icon style={{color:'#ccc'}} name="chevron-right" type="Entypo"/>
                 </RN.View>  
                 <RN.View style={{flex:5, flexDirection:'row', alignContent:'center', alignItems:'center', padding:10}}>
                     <RN.View style={{flex:1}}>
-                        {labels.map(label => <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>{label}</RN.Text>)}
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Position</RN.Text>
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Date</RN.Text>
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Contact</RN.Text>
                     </RN.View>
                     <RN.View style={{flex:1}}>
-                        {post.map(info => <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{info}</RN.Text>)}
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.position}</RN.Text>
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.date}</RN.Text>
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.contact}</RN.Text>
                     </RN.View>
                 </RN.View>
             </RN.View>
@@ -34,29 +41,62 @@ class Post extends React.Component{
     }
 }
 
-var post1 = {
-    type: 0,
-    title: 'Missing Player',
-    position: 'GK',
-    location:'Maslak/Istanbul',
-    date: '13.08.2019',
-    contact: '+90 544 444 44 44'
-}
-
-var labels = ['Position', 'Location', 'Date', 'Contact']
-var post = [post1.position, post1.location, post1.date, post1.contact]
-var title = post1.title;
-
 export default class ListMatches extends React.Component{
+    state={
+        isLeader:false,
+        modalVisible:false,
+        matches:[],
+        loaded:false,
+    }
+    componentWillMount(){
+        this.isTeamLeader();
+        this.getList();
+    }
+    async getList(){
+        let that = this;
+        let y = [];
+        let matchRef = Firebase.firestore().collection('matches');
+        await matchRef.get().then(snapshot => {
+            snapshot.docs.forEach(doc => {
+                let match = doc.data();
+                match.id = doc.id;
+                y.push(match);
+            })
+        })
+        await this.setState({matches:y, loaded:true});
+    }
+    async isTeamLeader(){
+    let teamRef = Firebase.firestore().collection('users').doc(Firebase.auth().currentUser.uid);
+        let teamid={}
+        await teamRef.get().then(docs => {
+            teamid=docs.data()
+        });
+        this.setState({isLeader:teamid.hasteam})
+    }
     render(){
+        let {matches} = this.state;
         return(
             <RN.View style={styles.ListMatchesView}>
-                <Header title="Matches" drawer={true} navigation={this.props.navigation}/>
-                <RN.ScrollView contentContainerStyle={{height:height*.7}}>
-                    <Post post = {post} labels={labels} title={title}/>
-                    <Post post = {post} labels={labels} title={title}/>
-                </RN.ScrollView>
-                
+                <Header title="Matches" plus={this.state.isLeader} plusOnPress={
+                    ()=>{ 
+                        this.setState({modalVisible:true})
+                    }
+                } drawer={true} navigation={this.props.navigation}/>
+                <RNE.Overlay
+                    isVisible={this.state.modalVisible} 
+                    windowBackgroundColor="rgba(255, 255, 255, .8)"
+                    overlayStyle={{backgroundColor:Colors.postBackground, width:width*0.9, height:height*.5, borderRadius:width*.1, overflow:'hidden'}}
+                    containerStyle={{width:width, height:height, flex:1}}
+                    animationType="fade"
+                    animated={true}
+                    onBackdropPress={() => this.setState({modalVisible: false})}>
+                        <CreateMatchPost/>
+                </RNE.Overlay>
+                    {this.state.loaded ? <RN.FlatList
+                        data={matches}
+                        renderItem={(item) =>  <Post match = {item.item} navigation={this.props.navigation}/>}
+                        keyExtractor={(item) => item.id}
+                    /> : <Loading extra={true} extraText="Match list will be available in a few seconds"/>}
             </RN.View>
         )
     }
