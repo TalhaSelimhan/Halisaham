@@ -18,6 +18,7 @@ import AreaInfo from "./AreaInfo";
 import {createStackNavigator} from 'react-navigation-stack'
 import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
 import Firebase from "../Config/Firebase";
+import * as firebase from "firebase";
 require('firebase/firestore');
 const Screen = Dimensions.get("screen");
 const height = Screen.height;
@@ -75,6 +76,7 @@ const TeamsPage = createStackNavigator({
   });
 
 
+
 const CustomDrawerComponent= (props) =>{
       let photourl = Firebase.auth().currentUser.photoURL;
       let name = Firebase.auth().currentUser.displayName;
@@ -92,7 +94,7 @@ const CustomDrawerComponent= (props) =>{
           </ScrollView>
           <TouchableOpacity style={{marginBottom:20, flexDirection:'row', padding:8, marginHorizontal:40,borderRadius:100, backgroundColor:Colors.postBackground, justifyContent:'space-around'}} onPress={async ()=>await Firebase.auth().signOut()}>
                 <NB.Icon name="poweroff" type="AntDesign" style={{fontSize:24,color:"#d45675"}}/>
-                <Text style={{fontSize:16, color:'#d45675', letterSpacing:1.5, fontWeight:'500', textAlign:'center'}}>Sign Out</Text>
+                <Text style={{fontSize:16, color:'#d45675', letterSpacing:1.5, fontWeight:'500', textAlign:'center', textAlignVertical:'center'}}>Sign Out</Text>
           </TouchableOpacity>
 
         </View>
@@ -143,7 +145,8 @@ const TeamLeader = createDrawerNavigator({
   },
   "Match Requests":{
       screen:TeamRequests,
-  }
+  },
+  
 },
 {
   contentComponent:CustomDrawerComponent,
@@ -159,24 +162,24 @@ const TeamLead = createAppContainer(TeamLeader);
 
 export default class TabNavigator extends React.Component{
   state={
-    deneme:false,
+    isleader:false,
   }
-  componentWillMount(){
-    this.isTeamLeader();
+  async checkLeader(){
+    let teamRef = Firebase.firestore().collection('users').where(firebase.firestore.FieldPath.documentId(), "==", Firebase.auth().currentUser.uid);
+    let isleader= false
+    let that = this;
+    var listener = teamRef.onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        isleader = change.doc.data().hasteam;
+        that.setState({isleader:isleader})
+      })
+    })
   }
-  async isTeamLeader(){
-    let teamRef = Firebase.firestore().collection('users').doc(Firebase.auth().currentUser.uid);
-    let teamid={}
-    await teamRef.get().then(docs => {
-        teamid=docs.data()
-    });
-    this.setState({deneme:teamid.hasteam})
+  async componentWillMount(){
+    this.checkLeader();
   }
   render(){
-    if(this.state.deneme) return(<TeamLead/>);
-    return(
-      <Contain/>
-    )
+    return !this.state.isleader ? <Contain/> : <TeamLead/>
   }
 }
 

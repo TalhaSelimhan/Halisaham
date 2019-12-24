@@ -33,6 +33,7 @@ class AreaInfo extends React.Component{
             areadata:{},
             loaded:false,
             modalVisible:false,
+            locationFetched:false
         }
     }
 
@@ -72,6 +73,10 @@ class AreaInfo extends React.Component{
     }
     
     rateFinish(rating){
+        if(!this.state.areadata.canVote){
+            RN.Alert.alert("You have voted this area before", "You can vote an area once in a week!");
+            return;
+        }
         RN.Alert.alert('You gave ' + rating.toString() + ' points', 
                        'Do you confirm this rating', 
                     [{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel',},
@@ -91,7 +96,7 @@ class AreaInfo extends React.Component{
         })
     }
 
-    _getLocationAsync = async () => {
+    async _getLocationAsync(){
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
@@ -101,7 +106,7 @@ class AreaInfo extends React.Component{
         let location = await Location.getCurrentPositionAsync({});
         await this.setState({userlocation:location.coords});
         return location.coords;
-    };
+    }
 
     async openMapsApp(){
         let origin = this.state.userlocation;
@@ -162,12 +167,12 @@ class AreaInfo extends React.Component{
         }
         let location = await this._getLocationAsync();
         let distance = this.getDistance(location.latitude, location.longitude);
-        this.setState({userlocation:location, distance:distance, loaded:true});
+        await this.setState({userlocation:location, distance:distance, loaded:true});
     }
     render(){
         let {areadata, modalVisible, distance, isareaowner, loaded} = this.state;
         if(!loaded) return <Loading extra={true} extraText="Area Info is being prepared for you"/>
-        return(
+        else return(
             <RN.View style={{flex:1}}>
                 <ReserveArea modalVisible={modalVisible} that={this} areaid={this.state.areadata.id} areaname={this.state.areadata.name}/>
                 <RN.View style={styles.imageView}>
@@ -200,10 +205,10 @@ class AreaInfo extends React.Component{
                     <RN.View style={styles.secondSection}>
                         <RN.Text style={{textAlign:'center', fontSize:16, fontWeight:'600', color:this.getRatingColor()}}>{areadata.rating} / 5</RN.Text>
                         <Rating.Rating
+                            ref={c => this.starRating = c}
                             type="custom"
                             ratingColor={this.getRatingColor()}
                             startingValue={areadata.rating}
-                            readonly={!areadata.canVote}
                             showRating={false}
                             fractions={1}
                             onFinishRating={rating => this.rateFinish(rating)}
