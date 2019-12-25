@@ -26,6 +26,7 @@ class TeamProfile extends React.Component{
             show:1,
             teamdata:{},
             drawerci:true,
+            challenge:true,
         }
     }
     async loadTeam(uid){
@@ -36,7 +37,7 @@ class TeamProfile extends React.Component{
             teamxRef.get().then(snapshots=>{snapshots.docs.forEach(
                 doc=>{
                     if(doc.exists){
-                        that.setState({teamdata:doc.data(),drawerci:false})
+                        that.setState({teamdata:doc.data(),chellange:false,drawerci:false})
                         that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
                     }
                 }
@@ -80,6 +81,7 @@ class TeamProfile extends React.Component{
                         </RN.View>
                         <RN.View style={{width:width*0.30, justifyContent:'space-around'}}>
                             <Button title="CHALLENGE"
+                                    disable={!this.state.challenge}
                                     onPress={() => navigation.navigate('ChallengePage', {toChallengeId:teamdata.id, toChallengeName:teamdata.name})}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.3, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>

@@ -42,6 +42,8 @@ export default class RequestPage extends React.Component{
             title:this.state.title,
             status:"Waiting",
         })
+        RN.Alert.alert("Request Created")
+        this.props.navigation.pop()
     }
     async currentTeam (){ 
         let that =this
