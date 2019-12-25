@@ -67,11 +67,13 @@ class PlayerProfile extends React.Component{
                         </RN.View>
                         <RN.View style={{width:width*0.20, justifyContent:'space-around'}}>
                             <Button title="EDIT"
+                                    disabled={false}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.20, height:height*0.04}}
                                     textStyle={{color:colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <Button title="INVITE"
-                                    containerStyle={{backgroundColor:Colors.squadButton, width:width*0.20, height:height*0.04}}
-                                    textStyle={styles.buttonText}/>
+                                    disabled={true}
+                                    containerStyle={{backgroundColor:"#aaa", width:width*0.20, height:height*0.04}}
+                                    textStyle={{...styles.buttonText, textDecorationLine:'line-through'}}/>
                         </RN.View>
                     </RN.View>
                     <RN.View style={styles.secondSection}>
