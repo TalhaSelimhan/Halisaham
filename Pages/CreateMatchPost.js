@@ -40,7 +40,7 @@ export default class overlayke extends React.Component{
             teamid:team.id,
             status:"Applicable"
         })
-        Alert.alert("Success!", "You applied for this position");
+        Alert.alert("Success!", "Your match post is created");
         that2.setState({modalVisible:false});
     }
 
@@ -84,7 +84,7 @@ export default class overlayke extends React.Component{
                         placeHolderText="Select Match Date"
                         textStyle={{ color: "white" }}
                         placeHolderTextStyle={{ color: "#d3d3d3" }}
-                        onDateChange={(date) => this.setState(date)}
+                        onDateChange={(date) => this.setState({date:date})}
                         disabled={false}
                     />
                 </NB.Item>
