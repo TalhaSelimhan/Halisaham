@@ -42,22 +42,22 @@ class AreaInfo extends React.Component{
         let areaRef = Firebase.firestore().collection('areas');
         areaRef = _areaowner ? areaRef.where('owneruid', '==', uid).limit(1) : areaRef.doc(uid);
         if(_areaowner){
-            areaRef.get().then(snapshot => {
-                snapshot.docs.forEach(doc => {
+            await areaRef.get().then(snapshot => {
+                snapshot.docs.forEach(async doc => {
                     let area = doc.data();
                     area.id = doc.id;
                     area.canVote = false;
-                    that.setState({areadata:area});
+                    await that.setState({areadata:area});
                 })
             })
         }
         else{
-            areaRef.get().then(doc => {
+            await areaRef.get().then(async doc => {
                 if(doc.exists){
                     let area = doc.data();
                     area.id = uid;
                     area.canVote = !area.votes.includes(Firebase.auth().currentUser.uid);
-                    that.setState({areadata:area});
+                    await that.setState({areadata:area});
                 }
             })
         }
@@ -134,7 +134,7 @@ class AreaInfo extends React.Component{
       });
     }
 
-    getDistance(lat2, lon2){
+    async getDistance(lat2, lon2){
         let pi = Math.PI;
         let lat1 = this.state.areadata.latitude;
         let lon1 = this.state.areadata.longitude;
@@ -152,21 +152,21 @@ class AreaInfo extends React.Component{
     }
 
     async componentWillMount(){
-        let area = this.props.navigation.getParam('area');
-        let uid = this.props.navigation.getParam('uid');
+        let area = await this.props.navigation.getParam('area');
+        let uid = await this.props.navigation.getParam('uid');
         if(area){
-            this.setState({areadata:area, isareaowner:false})
+            await this.setState({areadata:area, isareaowner:false})
         }
         else if(uid){
             await this.loadArea(uid, false);
-            this.setState({isareaowner:false})
+            await this.setState({isareaowner:false})
         }
         else{
             await this.loadArea(Firebase.auth().currentUser.uid, true);
-            this.setState({isareaowner:true})
+            await this.setState({isareaowner:true})
         }
         let location = await this._getLocationAsync();
-        let distance = this.getDistance(location.latitude, location.longitude);
+        let distance = await this.getDistance(location.latitude, location.longitude);
         await this.setState({userlocation:location, distance:distance, loaded:true});
     }
     render(){
@@ -195,7 +195,7 @@ class AreaInfo extends React.Component{
                         </RN.View>
                         <RN.View style={{width:width*0.25, justifyContent:'center'}}>
                             <Button title={isareaowner ? "EDIT":"RESERVE"} onPress={() => {if(!isareaowner) this.setState({modalVisible:!modalVisible})}}
-                                    containerStyle={{backgroundColor:'#fff', width:width*0.25, height:height*0.04}}
+                                    containerStyle={{backgroundColor:'#fff', marginBottom:5,width:width*0.25, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <RN.View>
                                 <RN.Text style={{fontSize:16, fontWeight:'600', color:'#fff', textAlign:'center'}}>{areadata.price}₺ / Hour</RN.Text>
