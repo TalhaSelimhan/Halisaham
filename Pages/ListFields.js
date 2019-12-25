@@ -48,7 +48,9 @@ class Field extends React.Component{
 class ListFields extends React.Component{
     state={
         areas:[],
-        loaded:false
+        loaded:false,
+        refresh:false,
+        search:"",
     }
     async loadAreas(){
         let that = this;
@@ -61,7 +63,7 @@ class ListFields extends React.Component{
                 areas.push(area);
             })
         })
-        this.setState({areas:areas, loaded:true});
+        this.setState({areas:areas, loaded:true,refresh:false});
     }
     async componentWillMount(){
         await this.loadAreas();
@@ -72,9 +74,20 @@ class ListFields extends React.Component{
         return(
             <RN.View style={styles.FieldsListView}>
                 <Header title="Fields" navigation={this.props.navigation} drawer={true}/>
+                <RN.TextInput value={this.state.search} onChangeText={(search)=>this.setState({search})} placeholder="Search fields.." style={{paddingLeft:20,height:"5%",borderRadius:2,borderColor:"black",borderRadius:40,marginTop:10,width:"90%",backgroundColor:"white"}} />
                 <RN.FlatList 
+                    refreshing={this.state.refresh}
+                    onRefresh={async ()=>{
+                        await this.setState({refresh:true})
+                        await this.loadAreas()
+                    }}
                     data={areas}
-                    renderItem={item => <Field field={item.item} navigation={this.props.navigation}/>}
+                    extraData={this.state.search}
+                    renderItem={item => {
+                        if(item.item.name.toLowerCase().includes(this.state.search.toLowerCase())){
+                            return <Field field={item.item} navigation={this.props.navigation}/>
+                        }
+                    }}
                     keyExtractor={item => item.id}
                 />
             </RN.View>

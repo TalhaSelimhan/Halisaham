@@ -150,7 +150,6 @@ export default class CreateArea extends React.Component{
             votes:[],
             owneruid:uid
         }).then(async (doc)=>{
-            RN.Alert.alert(doc.id);
             let imageUri= await this.resimYukle(this.state.image,"/areas/"+doc.id);
             areaRef.doc(doc.id).update({
                 photourl:imageUri

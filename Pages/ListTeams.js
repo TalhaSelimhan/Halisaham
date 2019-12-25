@@ -54,7 +54,8 @@ class ListTeams extends React.Component{
     state={
         teams:[],
         loaded:false,
-        search:""
+        search:"",
+        refresh:false,
     }
     async loadTeams(){
         let that = this;
@@ -69,7 +70,7 @@ class ListTeams extends React.Component{
                 teams.push(team);
             })
         })
-        this.setState({teams:teams, loaded:true});
+        this.setState({teams:teams, refresh:false,loaded:true});
     }
     async componentWillMount(){
         await this.loadTeams();
@@ -82,6 +83,11 @@ class ListTeams extends React.Component{
                 <Header title='Teams List' drawer={true} navigation={this.props.navigation}/>
                 <RN.TextInput onChangeText={text=>this.setState({search:text})} placeholder="Search teams.." style={{paddingLeft:20,height:"5%",borderRadius:2,borderColor:"black",borderRadius:40,marginTop:10,width:"90%",backgroundColor:"white"}} />
                 {loaded ? <RN.FlatList
+                    refreshing={this.state.refresh}
+                    onRefresh={async ()=>{
+                        await this.setState({refresh:true})
+                        await this.loadTeams()
+                    }}
                     data={teams}
                     extraData={this.state.search}
                     renderItem={(item) =>  {

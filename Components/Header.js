@@ -22,7 +22,9 @@ export default class Header extends React.Component{
                 <RN.View style={{flex:4,marginTop:Constants.statusBarHeight,alignItems:"center",justifyContent:"center"}}>
                     <RN.Text style={{color:"white",fontSize:24}}>{this.props.title}</RN.Text>
                 </RN.View>
-                <RN.View style={{flex:1}}/>
+                <RN.View style={{flex:1,marginTop:Constants.statusBarHeight,alignItems:"center",justifyContent:"center"}}>
+                    {this.props.plus && <NB.Icon name="plus" type="Feather" onPress={()=>this.props.plusOnPress()}/> }
+                </RN.View>
             </RN.View>            
         )
     }
