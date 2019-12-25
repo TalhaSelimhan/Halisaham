@@ -7,7 +7,7 @@ import Colors from '../Config/Colors'
 export default class Button extends React.Component{
     render(){
         return(
-            <RN.TouchableOpacity style={{...styles.container, ...this.props.containerStyle}} onPress={this.props.onPress}>
+            <RN.TouchableOpacity style={{...styles.container, ...this.props.containerStyle}} onPress={this.props.onPress} disabled={true && this.props.disabled}>
                 <RN.Image source={this.props.logo1} style={{flex:1, width:20, height:20, resizeMode:'contain'}}/>
                 <RN.Text style={{...styles.textStyle, ...this.props.textStyle}}>{this.props.title}</RN.Text>
                 <RN.View style={{flex:1}}/>

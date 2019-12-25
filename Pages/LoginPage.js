@@ -17,8 +17,11 @@ import TabNavigator from "./TabNavigator";
 import CreateArea from "./CreateArea";
 import Firebase from "../Config/Firebase";
 require('firebase/firestore');
+import * as firebase from "firebase";
 const usersRef = Firebase.firestore().collection('users');
 
+var googleProvider = new firebase.auth.GoogleAuthProvider();
+var facebookProvider = new firebase.auth.FacebookAuthProvider();
 
 
 class LandingPage extends React.Component{
@@ -34,12 +37,12 @@ class LandingPage extends React.Component{
                 <RN.View style={{flex:3, alignItems:"center", justifyContent:"center", opacity:0.9}}>
                     <RN.Text style={{color:"#dedede", fontSize:14, textAlign:'center', width:'75%', margin:10}}>Continue with:</RN.Text>
                     <Button title="Sign in with Google" 
-                            onPress={() => this.props.navigation.navigate("Login")} 
+                            onPress={() => RN.Alert.alert("Oopss...", "Google sign in is not supported yet")} 
                             containerStyle={{height:40, marginBottom:10, backgroundColor:'#fff'}}
                             textStyle={{color:Colors.headerBackground, fontWeight:'100'}}
                             logo1={require('../Images/googleLogo.png')}/>
                     <Button title="Sign in with Facebook"
-                            onPress={() => this.props.navigation.navigate("Login")} 
+                            onPress={() => RN.Alert.alert("Oopss...", "Facebook sign in is not supported yet")} 
                             containerStyle={{height:40, marginBottom:10, backgroundColor:'#1877f2'}}
                             logo1={require('../Images/facebookLogo.png')}/>
                 </RN.View>         
@@ -67,6 +70,19 @@ class LoginPage extends React.Component{
         }catch(error){
             RN.Alert.alert(error.code, error.message);
         }
+    }
+    forgotPassword(){
+        let inputs = this.state;
+        if(inputs.email == ""){
+            RN.Alert.alert("Please enter your e-mail", "Fill the e-mail input to get a reset email!");
+            return;
+        }
+        Firebase.auth().sendPasswordResetEmail(inputs.email).then(() => {
+            RN.Alert.alert("Success!", "Password reset email is sent, please check your inbox.")
+        }).catch(error => {
+            RN.Alert.alert(error.code, error.message)
+        });
+        
     }
     render(){
         return(
@@ -103,7 +119,7 @@ class LoginPage extends React.Component{
                             <NB.Input autoCompleteType="password" autoCapitalize="none" secureTextEntry={true} onChangeText={text => this.setState({password:text})}/>
                         </NB.Item>
                     </NB.Form>
-                    <RN.Text style={styles.forgotPasswordStyle}>Forgot password ?</RN.Text>
+                    <RN.Text style={styles.forgotPasswordStyle} onPress={() => this.forgotPassword()}>Forgot password ?</RN.Text>
                 </RN.View>
                 <RN.View style={{flex:2, alignContent:"flex-end", padding:10, justifyContent:'space-around'}}>
                     <Button title="LOGIN"
