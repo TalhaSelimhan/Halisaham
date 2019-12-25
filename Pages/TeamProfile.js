@@ -23,6 +23,7 @@ class TeamProfile extends React.Component{
     constructor(props){
         super(props);
         this.state={
+            user:{},
             show:1,
             teamdata:{},
             drawerci:true,
@@ -30,7 +31,13 @@ class TeamProfile extends React.Component{
         }
     }
     async loadTeam(uid){
-        
+        userRef=Firebase.firestore().collection("users").doc(Firebase.auth().currentUser.uid)
+        userRef.get().then(async doc=>{
+            if(doc.exists){
+                await that.setState({user:doc.data()})
+            }
+
+        })
         let that = this;
         if(uid==undefined){
             let teamxRef = Firebase.firestore().collection('teams').where("leaderid","==",Firebase.auth().currentUser.uid);
@@ -49,7 +56,7 @@ class TeamProfile extends React.Component{
             if(doc.exists){
                 await that.setState({teamdata:doc.data()})
                 await that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
-                if(that.state.teamdata.leaderid==Firebase.auth().currentUser.uid) await that.setState({challenge:false})
+                if(that.state.teamdata.leaderid==Firebase.auth().currentUser.uid || this.state.user.hasteam.toString() == "false" ) await that.setState({challenge:false})
             }
         })
     }
