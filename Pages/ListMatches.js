@@ -47,6 +47,7 @@ export default class ListMatches extends React.Component{
         modalVisible:false,
         matches:[],
         loaded:false,
+        refresh:false,
     }
     componentWillMount(){
         this.isTeamLeader();
@@ -63,7 +64,7 @@ export default class ListMatches extends React.Component{
                 y.push(match);
             })
         })
-        await this.setState({matches:y, loaded:true});
+        await this.setState({matches:y, loaded:true,refresh:false});
     }
     async isTeamLeader(){
     let teamRef = Firebase.firestore().collection('users').doc(Firebase.auth().currentUser.uid);
@@ -93,6 +94,11 @@ export default class ListMatches extends React.Component{
                         <CreateMatchPost/>
                 </RNE.Overlay>
                     {this.state.loaded ? <RN.FlatList
+                        refreshing={this.state.refresh}
+                        onRefresh={async ()=>{
+                            await this.setState({refresh:true})
+                            await this.getList()
+                        }}
                         data={matches}
                         renderItem={(item) =>  <Post match = {item.item} navigation={this.props.navigation}/>}
                         keyExtractor={(item) => item.id}
