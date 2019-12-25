@@ -75,7 +75,13 @@ class ListFields extends React.Component{
             <RN.View style={styles.FieldsListView}>
                 <Header title="Fields" navigation={this.props.navigation} drawer={true}/>
                 <RN.TextInput value={this.state.search} onChangeText={(search)=>this.setState({search})} placeholder="Search fields.." style={{paddingLeft:20,height:"5%",borderRadius:2,borderColor:"black",borderRadius:40,marginTop:10,width:"90%",backgroundColor:"white"}} />
-                <RN.FlatList 
+                <RN.FlatList
+                    ref={c=>this.matches=c}
+                    ListEmptyComponent={()=>{
+                        return <Button title={"Fetch"} onPress={()=>{
+                            this.matches.props.onRefresh()
+                        }} containerStyle={{backgroundColor:"#24a0ed",height:80,width:80,marginTop:20,borderRadius:200}} />
+                    }} 
                     refreshing={this.state.refresh}
                     onRefresh={async ()=>{
                         await this.setState({refresh:true})

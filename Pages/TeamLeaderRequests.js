@@ -119,10 +119,11 @@ export default class ListRequests extends React.Component{
             <RN.View style={styles.FieldsListView}>
                 <Header title="Requests" navigation={this.props.navigation} drawer={true}/>
                 <RN.View style={{height:height*0.05,flexDirection:"row",marginTop:10,marginBottom:10}}>
-                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Incoming" onPress={()=>{this.setState({checker:"true"})}} />
-                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Sended" onPress={()=>{this.setState({checker:"false"})}} />
+                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Incoming" onPress={()=>{this.setState({checker:"true"});this.listx.props.onRefresh()}} />
+                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Sent" onPress={()=>{this.setState({checker:"false"});this.listx.props.onRefresh()}} />
                 </RN.View>
                 <RN.FlatList 
+                    ref={c=>this.listx=c}
                     refreshing={this.state.refresh}
                     onRefresh={async ()=>{
                         await this.setState({refresh:true})

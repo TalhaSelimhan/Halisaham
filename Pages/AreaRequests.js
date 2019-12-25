@@ -105,7 +105,13 @@ class ListRequests extends React.Component{
         return(
             <RN.View style={styles.FieldsListView}>
                 <Header title="Requests" navigation={this.props.navigation} drawer={true}/>
-                <RN.FlatList 
+                <RN.FlatList
+                    ref={c=>this.matches=c}
+                    ListEmptyComponent={()=>{
+                        return <Button title={"Fetch"} onPress={()=>{
+                            this.matches.props.onRefresh()
+                        }} containerStyle={{backgroundColor:"#24a0ed",height:80,width:80,marginTop:20,borderRadius:200}} />
+                    }} 
                     refreshing={this.state.refresh}
                     onRefresh={async ()=>{
                         this.setState({refresh:true})

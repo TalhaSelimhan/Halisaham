@@ -125,7 +125,9 @@ class Application extends React.Component{
         let {application, response} = this.props;
         let {status} = this.state;
         return(
-            <RN.TouchableOpacity style={styles.MatchPostView} disabled={!response} onPress={() => this.responseAlert()}>
+            <RN.TouchableOpacity style={styles.MatchPostView} 
+                disabled={!response || status!="Waiting"} 
+                onPress={() => this.responseAlert()}>
                 <RN.View style={styles.PostHeader}>
                     {response ? 
                         <RN.Text style={{color:'#fff', fontSize:14, letterSpacing:2, fontWeight:'400'}}>{application.sendername} is applied to your post!</RN.Text>
@@ -272,6 +274,12 @@ export default class ListMatches extends React.Component{
 
                 {loaded && (show == "Matches") && 
                     <RN.FlatList
+                        ref={c=>this.matches=c}
+                        ListEmptyComponent={()=>{
+                            return <Button title={"Fetch"} onPress={()=>{
+                                this.matches.props.onRefresh()
+                            }} containerStyle={{backgroundColor:"#24a0ed",height:80,width:80,marginTop:20,borderRadius:200}} />
+                        }}
                         refreshing={this.state.refresh}
                         onRefresh={async ()=>{await this.setState({refresh:true}); await this.getList();}}
                         data={matches}
@@ -280,6 +288,12 @@ export default class ListMatches extends React.Component{
                 
                 {loaded && (show == "Applied") && 
                     <RN.FlatList
+                        ref={c=>this.applied=c}
+                        ListEmptyComponent={()=>{
+                            return <Button title={"Fetch"} onPress={()=>{
+                                this.applied.props.onRefresh()
+                            }} containerStyle={{backgroundColor:"#24a0ed",height:80,width:80,marginTop:20,borderRadius:200}} />
+                        }}
                         refreshing={this.state.refresh}
                         onRefresh={async ()=>{await this.setState({refresh:true}); await this.getMyApplications();}}
                         data={applications}
@@ -288,6 +302,12 @@ export default class ListMatches extends React.Component{
 
                 {loaded && (show == "Incoming") && 
                     <RN.FlatList
+                        ref={c=>this.incoming=c}
+                        ListEmptyComponent={()=>{
+                            return <Button title={"Fetch"} onPress={()=>{
+                                this.incoming.props.onRefresh()
+                            }} containerStyle={{backgroundColor:"#24a0ed",height:80,width:80,marginTop:20,borderRadius:200}} />
+                        }}
                         refreshing={this.state.refresh}
                         onRefresh={async ()=>{await this.setState({refresh:true}); await this.getIncomingApplications();}}
                         data={incoming}
