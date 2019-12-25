@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 10808,
-  "expoServerNgrokUrl": "https://4m-yma.hbt19031.halisaham.exp.direct",
-  "packagerNgrokUrl": "https://packager.4m-yma.hbt19031.halisaham.exp.direct",
-  "ngrokPid": 2888,
+  "packagerPid": 10128,
+  "expoServerNgrokUrl": "https://9m-8t7.hbt19031.halisaham.exp.direct",
+  "packagerNgrokUrl": "https://packager.9m-8t7.hbt19031.halisaham.exp.direct",
+  "ngrokPid": 4240,
   "devToolsPort": 19002
 }

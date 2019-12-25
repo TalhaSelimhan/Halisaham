@@ -17,6 +17,7 @@ import * as firebase from "firebase";
 require('firebase/firestore');
 
 
+
 class Post extends React.Component{
     async applyAlert(){
         let {match} = this.props
@@ -110,10 +111,10 @@ export default class ListMatches extends React.Component{
         refresh:false,
         show:"Matches",
     }
-    componentWillMount(){
-        this.isTeamLeader();
-        this.getList();
-        this.getMyApplications();
+    async componentWillMount(){
+        await this.isTeamLeader();
+        await this.getList();
+        await this.getMyApplications();
     }
     async getList(){
         let that = this;
@@ -138,12 +139,11 @@ export default class ListMatches extends React.Component{
     }
     async getMyApplications(){
         let that = this;
-        that.setState({loaded:false});
         let applications = [];
         let applicationsRef = Firebase.firestore().collection("matchapplications").where("senderid", "==", Firebase.auth().currentUser.uid);
         let teamRef = Firebase.firestore().collection("teams");
         let matchRef = Firebase.firestore().collection("matches");
-        applicationsRef.get().then(docs => {
+        await applicationsRef.get().then(docs => {
             docs.forEach(async (doc) => {
                 let application = doc.data();
                 application.id = doc.id;
@@ -161,9 +161,11 @@ export default class ListMatches extends React.Component{
                         application.location = doc.data().location;
                     })
                 })
-                applications.push(application); 
+                await applications.push(application); 
             })
-        }).then(() => that.setState({applications:applications, loaded:true}));
+        })
+        await this.setState({applications:applications});
+        await this.setState({loaded:true, refresh:false});
     }
     
     render(){
@@ -186,15 +188,17 @@ export default class ListMatches extends React.Component{
                     onBackdropPress={() => this.setState({modalVisible: false})}>
                         <CreateMatchPost that={this}/>
                 </RNE.Overlay>
-                {this.state.loaded ? 
-                    (this.state.show != "Matches") ?
+                {(this.state.show != "Matches") ? 
+                    this.state.loaded?
                     <RN.FlatList
                         refreshing={this.state.refresh}
                         onRefresh={async ()=>{await this.setState({refresh:true}); await this.getMyApplications();}}
                         data={applications}
                         renderItem={(item) =>  <Application application={item.item} navigation={this.props.navigation}/>}
                         keyExtractor={(item) => item.id}/> 
-                    :<RN.FlatList
+                    : <Loading extra={true} extraText="Application list will be available in a few seconds"/>
+                    :this.state.loaded?
+                    <RN.FlatList
                         refreshing={this.state.refresh}
                         onRefresh={async ()=>{await this.setState({refresh:true}); await this.getList();}}
                         data={matches}

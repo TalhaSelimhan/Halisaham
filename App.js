@@ -20,6 +20,7 @@ import CreateArea from './Pages/CreateArea';
 import Loading from "./Components/Loading";
 import Firebase from './Config/Firebase';
 require('firebase/firestore');
+console.disableYellowBox = true;
 
 export default class App extends React.Component{
   constructor(props){

@@ -34,7 +34,7 @@ export default class PlayerStats extends React.Component{
                         ],
                         datasets: [
                         {
-                            data: [20, 45, 94, 72, 82],
+                            data: [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)],
                             strokeWidth: 2,
                         },
                         ],
