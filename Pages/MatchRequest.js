@@ -17,7 +17,7 @@ require('firebase/firestore');
 
 export default class RequestPage extends React.Component{
     state={
-        date:"",
+        date:new Date().getDate(),
         title:"",
         description:"",
         areas:[],
@@ -31,6 +31,18 @@ export default class RequestPage extends React.Component{
     }
     
     createRequest(){
+        if(this.state.title.length<1){
+            RN.Alert.alert("Title can not be empty")
+            return
+        }
+        else if(this.state.description.length<1){
+            RN.Alert.alert("Description can not be empty")
+            return
+        }
+        else if(this.state.date.getTime()<=new Date().getTime()){
+            RN.Alert.alert("You should pick a later date.")
+            return
+        }
         var requestRef = Firebase.firestore().collection('matchrequests');
         requestRef.add({
             date:this.state.date.toISOString().slice(0,10),

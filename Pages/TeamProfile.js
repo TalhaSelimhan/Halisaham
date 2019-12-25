@@ -35,20 +35,21 @@ class TeamProfile extends React.Component{
         if(uid==undefined){
             let teamxRef = Firebase.firestore().collection('teams').where("leaderid","==",Firebase.auth().currentUser.uid);
             teamxRef.get().then(snapshots=>{snapshots.docs.forEach(
-                doc=>{
+                async doc=>{
                     if(doc.exists){
-                        that.setState({teamdata:doc.data(),chellange:false,drawerci:false})
-                        that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
+                        await that.setState({teamdata:doc.data(),challenge:false,drawerci:false})
+                        await that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
                     }
                 }
             )})
             return
         }
         let teamsRef = Firebase.firestore().collection('teams').doc(uid);
-        teamsRef.get().then(doc => {
+        teamsRef.get().then(async doc => {
             if(doc.exists){
-                that.setState({teamdata:doc.data()})
-                that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
+                await that.setState({teamdata:doc.data()})
+                await that.setState({teamdata:{...this.state.teamdata,id:doc.id}})
+                if(that.state.teamdata.leaderid==Firebase.auth().currentUser.uid) await that.setState({challenge:false})
             }
         })
     }
@@ -81,7 +82,7 @@ class TeamProfile extends React.Component{
                         </RN.View>
                         <RN.View style={{width:width*0.30, justifyContent:'space-around'}}>
                             <Button title="CHALLENGE"
-                                    disable={!this.state.challenge}
+                                    disabled={!this.state.challenge}
                                     onPress={() => navigation.navigate('ChallengePage', {toChallengeId:teamdata.id, toChallengeName:teamdata.name})}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.3, height:height*0.04}}
                                     textStyle={{color:Colors.postBackground, fontSize:10, fontWeight:'600'}}/>
