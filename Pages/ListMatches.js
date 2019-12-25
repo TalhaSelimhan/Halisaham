@@ -16,10 +16,40 @@ require('firebase/firestore');
 
 
 class Post extends React.Component{
+    async applyAlert(){
+        let {match} = this.props
+        let checkerRef = Firebase.firestore().collection("matchapplications").where("matchid", "==", match.id).where("senderid", "==", Firebase.auth().currentUser.uid)
+        let showAlert = true;
+        await checkerRef.get().then(docs => {
+            docs.forEach(doc => {
+                if(doc.exists){
+                    RN.Alert.alert("Oopss", "You have already applied for this match!");
+                    showAlert = false;
+                }
+            })
+        })
+        if(showAlert){
+            RN.Alert.alert("Applying for this match", "Do you really want to apply for this position?", 
+                        [{text:"No", style:"destructive"},
+                         {text:"Yes, I'm in", onPress:this.applyRequest()}])
+        }
+    }
+    applyRequest(){
+        let {match} = this.props;
+        let requestRef = Firebase.firestore().collection("matchapplications");
+        requestRef.add({
+            matchid:match.id,
+            teamid:match.teamid,
+            senderid:Firebase.auth().currentUser.uid,
+            sendername:Firebase.auth().currentUser.displayName,
+            status:"Waiting"
+        })
+        RN.Alert.alert("Success!", "Your application is sent to team leader, wait for response")
+    }
     render(){
         var {match} = this.props;
         return(
-            <RN.View style={styles.MatchPostView}>
+            <RN.TouchableOpacity style={styles.MatchPostView} onPress={async () => await this.applyAlert()}>
                 <RN.View style={styles.PostHeader}>
                     <RN.Text style={{color:'#ccc', fontSize:16, letterSpacing:2, fontWeight:'500'}}>{match.title}</RN.Text>
                     <NB.Icon style={{color:'#ccc'}} name="chevron-right" type="Entypo"/>
@@ -29,14 +59,16 @@ class Post extends React.Component{
                         <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Position</RN.Text>
                         <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Date</RN.Text>
                         <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Contact</RN.Text>
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Status</RN.Text>
                     </RN.View>
                     <RN.View style={{flex:1}}>
                         <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.position}</RN.Text>
                         <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.date}</RN.Text>
                         <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.contact}</RN.Text>
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{match.status}</RN.Text>
                     </RN.View>
                 </RN.View>
-            </RN.View>
+            </RN.TouchableOpacity>
         )
     }
 }
@@ -86,12 +118,12 @@ export default class ListMatches extends React.Component{
                 <RNE.Overlay
                     isVisible={this.state.modalVisible} 
                     windowBackgroundColor="rgba(255, 255, 255, .8)"
-                    overlayStyle={{backgroundColor:Colors.postBackground, width:width*0.9, height:height*.5, borderRadius:width*.1, overflow:'hidden'}}
+                    overlayStyle={{backgroundColor:Colors.postBackground, width:width*0.9, height:height*.7, borderRadius:width*.1, overflow:'hidden'}}
                     containerStyle={{width:width, height:height, flex:1}}
                     animationType="fade"
                     animated={true}
                     onBackdropPress={() => this.setState({modalVisible: false})}>
-                        <CreateMatchPost/>
+                        <CreateMatchPost that={this}/>
                 </RNE.Overlay>
                     {this.state.loaded ? <RN.FlatList
                         refreshing={this.state.refresh}

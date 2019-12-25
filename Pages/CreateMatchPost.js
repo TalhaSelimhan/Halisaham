@@ -23,20 +23,25 @@ export default class overlayke extends React.Component{
         position:"",
     }
     async createRequest(){
-        let that=this
-        let user={}
+        let that=this;
+        let that2 = this.props.that;
+        let team={}
         await Firebase.firestore().collection("teams").where("leaderid","==",Firebase.auth().currentUser.uid).get().then(docs=>docs.forEach(doc=>{
-            user=doc.data();
+            team=doc.data();
+            team.id = doc.id;
         }))
-        Alert.alert(user)
         requestRef=Firebase.firestore().collection("matches")
         await requestRef.add({
             title: that.state.title,
             location: that.state.distinct + " / Istanbul",
             position: that.state.position, 
             date:that.state.date.toISOString().slice(0,10),
-            contact:user.contact,
+            contact:team.contact,
+            teamid:team.id,
+            status:"Applicable"
         })
+        Alert.alert("Success!", "You applied for this position");
+        that2.setState({modalVisible:false});
     }
 
     render(){
