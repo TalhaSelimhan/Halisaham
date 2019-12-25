@@ -9,6 +9,9 @@ const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
 const height = Window.height;
 const width = Window.width;
+import Firebase from "../Config/Firebase";
+require('firebase/firestore');
+import * as Indicators from "react-native-indicators";
 
 
 class PlayerRow extends React.Component{
@@ -26,9 +29,9 @@ class PlayerRow extends React.Component{
         return(
             <RN.View style={{backgroundColor:player.id % 2 == 0 ? Colors.tableFirst : Colors.tableSecond, flexDirection:'row', height:height*0.05, justifyContent:'space-around', alignItems:'center'}}>
                 <RN.View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                    <RNE.Avatar source={{uri:player.image}} rounded containerStyle={{width:20, height:20}} avatarStyle={{width:20, height:20}}/>
+                    <RNE.Avatar source={{uri:player.photourl}} rounded containerStyle={{width:20, height:20}} avatarStyle={{width:20, height:20}}/>
                 </RN.View>
-                <RN.View style={{flex:3}}><RN.Text style={{textAlign:'center', color:'#fff'}}>{player.name}</RN.Text></RN.View>
+                <RN.View style={{flex:3}}><RN.Text style={{textAlign:'center', color:'#fff'}}>{player.fullname}</RN.Text></RN.View>
                 <RN.View style={{flex:1}}><RN.Text style={{textAlign:'center', color:'#fff'}}>{PlayerIcon}</RN.Text></RN.View>
                 <RN.View style={{flex:2}}><RN.Text style={{textAlign:'center', color:'#fff'}}>{player.type}</RN.Text></RN.View>
             </RN.View>
@@ -44,15 +47,34 @@ var players = [{id:1, 'name':'Lorenzo Insigne', 'type':'Leader', 'image':'https:
 
 
 export default class Squad extends React.Component{
+    state = {
+        players:[],
+        loaded:false
+    }
+    async componentWillMount(){
+        await this.loadSquad();
+    }
+    async loadSquad(){
+        let leaderRef = Firebase.firestore().collection("users").doc(this.props.team.leaderid)
+        let leader = [];
+        await leaderRef.get().then(doc => {
+            let player = doc.data();
+            player.id = doc.id;
+            player.type = "Leader"
+            leader = [player];
+        })
+        this.setState({players:leader, loaded:true});
+    }
     render(){
+        if(!this.state.loaded) return <Indicators.BarIndicator color="#eee" count={5}/>
         return(
             <RN.View>
                 <RN.Text style={{textAlign:'center', textAlignVertical:'center', fontSize:20, fontWeight:'700', padding:height*0.02, color:'#fff'}}>Squad</RN.Text>
                 <RN.FlatList
-                    data={players}
+                    data={this.state.players}
                     renderItem={({ item }) => <PlayerRow player={item} />}
                     ListFooterComponent={() => <RN.Text style={{fontSize:12, color:'#ccc', textAlign:'center', padding:height*0.05}}>No more players</RN.Text>}
-                    keyExtractor={item => item.id.toString()}
+                    keyExtractor={item => item.id}
                 />
             </RN.View>
         )

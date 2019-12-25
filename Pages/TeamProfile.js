@@ -100,7 +100,7 @@ class TeamProfile extends React.Component{
                         </RN.View>
                     </RN.View>
                     <RN.View style={styles.thirdSection}>
-                        {this.state.show == 1 ? <TeamMatchHistory/> : <TeamSquad/>}
+                        {this.state.show == 1 ? <TeamMatchHistory/> : <TeamSquad team={teamdata}/>}
                     </RN.View>
 
                 </RN.View>

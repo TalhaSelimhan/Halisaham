@@ -12,6 +12,9 @@ const height = Window.height;
 const width = Window.width;
 
 
+function generateStat(){
+    return Math.floor(Math.random() * 65) + 35;
+}
 
 
 export default class PlayerStats extends React.Component{
@@ -34,7 +37,7 @@ export default class PlayerStats extends React.Component{
                         ],
                         datasets: [
                         {
-                            data: [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)],
+                            data: [generateStat(), generateStat(), generateStat(), generateStat(), generateStat()],
                             strokeWidth: 2,
                         },
                         ],
