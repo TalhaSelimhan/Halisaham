@@ -3,6 +3,7 @@ import * as RN from "react-native";
 import * as RNE from "react-native-elements";
 import MapView from "react-native-maps";
 import * as NB from "native-base";
+import Button from '../Components/Button'
 import Constants from 'expo-constants';
 import Colors from "../Config/Colors";
 import Header from "../Components/Header";
@@ -22,7 +23,7 @@ class Request extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            request:props.request
+            request:props.request,
         }
     }
     getStatusColor(status){
@@ -49,9 +50,11 @@ class Request extends React.Component{
     render(){
         var {request} = this.state;
         return(
-            <RN.TouchableOpacity style={styles.FieldRowView} onPress={() => {if(request.status == "Waiting") this.changeStatus();}}>
+            <RN.TouchableOpacity style={styles.FieldRowView} onPress={() => {if(request.status == "Waiting"&&this.props.checker=="true") this.changeStatus();}}>
                 <RN.View style={styles.FieldHeader}>
-                    <RN.Text style={styles.FieldHeaderText}>Request From {request.teamname}</RN.Text>
+                    {this.props.checker=="true"?<RN.Text style={styles.FieldHeaderText}>Request From {request.teamname}</RN.Text>:
+                    <RN.Text style={styles.FieldHeaderText}>Request To {request.opponentname}</RN.Text>
+                    }
                 </RN.View>  
                 <RN.View style={styles.InfoField}>
                     <RN.View style={{flex:1}}>
@@ -75,18 +78,28 @@ export default class ListRequests extends React.Component{
         requests:[],
         loaded:false,
         refresh:false,
+        sended:[],
+        checker:"true",
     }
     async loadRequests(){
         let that = this;
         let requests = [];
         let teamid = null;
         let teamRef = Firebase.firestore().collection('teams').where('leaderid', '==', Firebase.auth().currentUser.uid);
+        let y=[];
         
         await teamRef.get().then(snapshot => {
             snapshot.docs.forEach(doc => {
                 teamid = doc.id;
             })
         })
+        let sendedRef=Firebase.firestore().collection('matchrequests').where("teamid","==",teamid);
+        sendedRef.get().then(snapshot=>{
+            snapshot.docs.forEach(doc=>{
+                let x = doc.data()
+                y.push(x)
+            })
+        }).then(()=> that.setState({sended:y}))
         let requestRef = Firebase.firestore().collection('matchrequests').where('opponentid', '==', teamid);
         requestRef.get().then(snapshot => {
             snapshot.docs.forEach(doc => {
@@ -100,11 +113,15 @@ export default class ListRequests extends React.Component{
         await this.loadRequests();
     }
     render(){
-        let {requests, loaded} = this.state;
+        let {requests, loaded,sended} = this.state;
         if(!loaded) return <Loading extra={true} extraText="Your requests are on way!"/>
         return(
             <RN.View style={styles.FieldsListView}>
                 <Header title="Requests" navigation={this.props.navigation} drawer={true}/>
+                <RN.View style={{height:height*0.05,flexDirection:"row",marginTop:10,marginBottom:10}}>
+                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Incoming" onPress={()=>{this.setState({checker:"true"})}} />
+                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Sended" onPress={()=>{this.setState({checker:"false"})}} />
+                </RN.View>
                 <RN.FlatList 
                     refreshing={this.state.refresh}
                     onRefresh={async ()=>{
@@ -112,8 +129,8 @@ export default class ListRequests extends React.Component{
                         await this.loadRequests()
                     }}
                     
-                    data={requests}
-                    renderItem={item => <Request request={item.item}/>}
+                    data={this.state.checker=="true"?requests:sended}
+                    renderItem={item => <Request checker={this.state.checker} request={item.item}/>}
                     keyExtractor={item => item.id}
                 />
             </RN.View>
