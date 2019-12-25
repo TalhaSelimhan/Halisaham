@@ -8,7 +8,12 @@ import * as firebase from 'firebase';
 import Header from '../Components/Header';
 import Button from '../Components/Button';
 import Colors from '../Config/Colors';
+import Loading from '../Components/Loading';
 require('firebase/firestore');
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export default class editProfile extends React.Component{
     state={
@@ -16,9 +21,11 @@ export default class editProfile extends React.Component{
         username:"",
         age:null,
         fullname:"",
+        loaded:false,
     }
     async componentWillMount(){
         await this.getUser();
+        sleep(1000)
     }
     async pushUpdate(){
 
@@ -47,13 +54,14 @@ export default class editProfile extends React.Component{
             x=doc.data()
             x.email=Firebase.auth().currentUser.email
         })
-        await this.setState({user:x,username:x.username,age:x.age,fullname:x.fullname})
+        await this.setState({user:x,username:x.username,age:x.age,fullname:x.fullname,loaded:true})
     }
     render(){
+        if(!this.state.loaded) return <Loading extra={true} extraText="Player edit page is loading." />
         return(
             <RN.View style={{flex:1,backgroundColor:Colors.postBackground}}>
                 <Header plusOnPress={()=>this.pushUpdate()} plus={true} title={"Edit Profile"} navigation={this.props.navigation}/>
-                <RN.View style={{flex:8,paddingHorizontal:20}}>
+                <RN.View style={{flex:8,paddingHorizontal:20,}}  >
                     <NB.Item floatingLabel style={{margin:10}}>
                         <NB.Label >
                             <NB.Icon style={{fontSize:20,color:"#ccc"}} name="users" type="Entypo"/>
