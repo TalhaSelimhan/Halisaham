@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/Feather";
 import Constants from "expo-constants";
 import Colors from "../Config/Colors";
 import Button from "../Components/Button";
+import {createStackNavigator} from 'react-navigation-stack';
 const Window = RN.Dimensions.get("window");
 const Screen = RN.Dimensions.get("screen");
 const height = Window.height;
@@ -16,6 +17,8 @@ import PlayerStats from "./PlayerStats";
 import colors from "../Config/Colors";
 import Firebase from "../Config/Firebase";
 import Loading from '../Components/Loading';
+import editProfile from "./EditProfile";
+import { createAppContainer } from "react-navigation";
 require('firebase/firestore');
 
 
@@ -68,6 +71,7 @@ class PlayerProfile extends React.Component{
                         <RN.View style={{width:width*0.20, justifyContent:'space-around'}}>
                             <Button title="EDIT"
                                     disabled={false}
+                                    onPress={()=>this.props.navigation.navigate('EditPlayer')}
                                     containerStyle={{backgroundColor:'#fff', width:width*0.20, height:height*0.04}}
                                     textStyle={{color:colors.postBackground, fontSize:10, fontWeight:'600'}}/>
                             <Button title="INVITE"
@@ -102,6 +106,21 @@ class PlayerProfile extends React.Component{
 }
 
 
+
+const PlayerPage = createStackNavigator({
+    PlayerProfile: {
+          screen:PlayerProfile,
+          navigationOptions:{
+              header:null,
+          }
+    },
+    EditPlayer:{
+        screen:editProfile,
+        navigationOptions:{
+            header:null,
+        }
+    }
+  });
 
 
 
@@ -211,4 +230,4 @@ const styles = RN.StyleSheet.create({
 })
 
 
-export default PlayerProfile;
+export default createAppContainer(PlayerPage);
