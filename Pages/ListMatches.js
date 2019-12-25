@@ -19,19 +19,19 @@ class Post extends React.Component{
     async applyAlert(){
         let {match} = this.props
         let checkerRef = Firebase.firestore().collection("matchapplications").where("matchid", "==", match.id).where("senderid", "==", Firebase.auth().currentUser.uid)
-        let showAlert = true;
+        let applied = false;
         await checkerRef.get().then(docs => {
             docs.forEach(doc => {
                 if(doc.exists){
                     RN.Alert.alert("Oopss", "You have already applied for this match!");
-                    showAlert = false;
+                    applied = true;
                 }
             })
         })
-        if(showAlert){
+        if(!applied){
             RN.Alert.alert("Applying for this match", "Do you really want to apply for this position?", 
                         [{text:"No", style:"destructive"},
-                         {text:"Yes, I'm in", onPress:this.applyRequest()}])
+                         {text:"Yes, I'm in", onPress:() => this.applyRequest()}])
         }
     }
     applyRequest(){
@@ -73,13 +73,40 @@ class Post extends React.Component{
     }
 }
 
+class Application extends React.Component{
+    render(){
+        var {application} = this.props;
+        return(
+            <RN.View style={styles.MatchPostView}>
+                <RN.View style={styles.PostHeader}>
+                    <RN.Text style={{color:'#ccc', fontSize:16, letterSpacing:2, fontWeight:'500'}}>{application.position} application to {application.teamname}</RN.Text>
+                </RN.View>  
+                <RN.View style={{flex:5, flexDirection:'row', alignContent:'center', alignItems:'center', padding:10}}>
+                    <RN.View style={{flex:1}}>
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Date</RN.Text>
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Location</RN.Text>
+                        <RN.Text style={{fontSize:12,fontWeight:'600', color:'#fff', letterSpacing:2}}>Status</RN.Text>
+                    </RN.View>
+                    <RN.View style={{flex:1}}>
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{application.date}</RN.Text>
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{application.location}</RN.Text>
+                        <RN.Text style={{fontSize:12, textAlign:'right', fontWeight:'300', color:'#ccc', letterSpacing:2}}>{application.status}</RN.Text>
+                    </RN.View>
+                </RN.View>
+            </RN.View>
+        )
+    }
+}
+
 export default class ListMatches extends React.Component{
     state={
         isLeader:false,
         modalVisible:false,
         matches:[],
+        applications:[],
         loaded:false,
         refresh:false,
+        showMatches:true,
     }
     componentWillMount(){
         this.isTeamLeader();
@@ -106,15 +133,45 @@ export default class ListMatches extends React.Component{
         });
         this.setState({isLeader:teamid.hasteam})
     }
+    async getMyApplications(){
+        let that = this;
+        that.setState({loaded:false});
+        let applications = [];
+        let applicationsRef = Firebase.firestore().collection("matchapplications").where("senderid", "==", Firebase.auth().currentUser.uid);
+        let teamRef = Firebase.firestore().collection("teams");
+        let matchRef = Firebase.firestore().collection("matches");
+        applicationsRef.get().then(docs => {
+            docs.forEach(async (doc) => {
+                let application = doc.data();
+                application.id = doc.id;
+                let tRef = teamRef.where(firebase.firestore.FieldPath.documentId(), "==", application.teamid);
+                await tRef.get().then(docs => {
+                    docs.forEach(doc => {
+                        application.teamname = doc.data().name;
+                    })
+                })
+                let mRef = matchRef.where(firebase.firestore.FieldPath.documentId(), "==", application.matchid);
+                await mRef.get().then(docs => {
+                    docs.forEach(doc => {
+                        application.date=doc.data().date;
+                        application.position = doc.data().position;
+                        application.location = doc.data().location;
+                    })
+                })
+                applications.push(application); 
+            })
+        }).then(() => that.setState({applications:applications, loaded:true}));
+    }
+    changeView(){
+        this.setState({showMatches:!this.state.showMatches});
+    }
+
     render(){
         let {matches} = this.state;
         return(
             <RN.View style={styles.ListMatchesView}>
-                <Header title="Matches" plus={this.state.isLeader} plusOnPress={
-                    ()=>{ 
-                        this.setState({modalVisible:true})
-                    }
-                } drawer={true} navigation={this.props.navigation}/>
+                <Header title="Matches" plus={this.state.isLeader} plusOnPress={()=>{ this.setState({modalVisible:true})}} 
+                        drawer={true} navigation={this.props.navigation}/>
                 <RNE.Overlay
                     isVisible={this.state.modalVisible} 
                     windowBackgroundColor="rgba(255, 255, 255, .8)"
@@ -125,16 +182,21 @@ export default class ListMatches extends React.Component{
                     onBackdropPress={() => this.setState({modalVisible: false})}>
                         <CreateMatchPost that={this}/>
                 </RNE.Overlay>
-                    {this.state.loaded ? <RN.FlatList
+                {this.state.loaded ? 
+                    !this.state.showMatches ?
+                    <RN.FlatList
                         refreshing={this.state.refresh}
-                        onRefresh={async ()=>{
-                            await this.setState({refresh:true})
-                            await this.getList()
-                        }}
+                        onRefresh={async ()=>{await this.setState({refresh:true}); await this.getMyApplications();}}
+                        data={matches}
+                        renderItem={(item) =>  <Application application={item.item} navigation={this.props.navigation}/>}
+                        keyExtractor={(item) => item.id}/> 
+                    :<RN.FlatList
+                        refreshing={this.state.refresh}
+                        onRefresh={async ()=>{await this.setState({refresh:true}); await this.getList();}}
                         data={matches}
                         renderItem={(item) =>  <Post match = {item.item} navigation={this.props.navigation}/>}
-                        keyExtractor={(item) => item.id}
-                    /> : <Loading extra={true} extraText="Match list will be available in a few seconds"/>}
+                        keyExtractor={(item) => item.id}/> 
+                        :<Loading extra={true} extraText="Match list will be available in a few seconds"/>}
             </RN.View>
         )
     }
