@@ -4,6 +4,7 @@ import * as RNE from "react-native-elements";
 import * as NB from "native-base";
 import Constants from 'expo-constants';
 import Header from "../Components/Header";
+import Button from "../Components/Button";
 import Colors from "../Config/Colors";
 import CreateMatchPost from './CreateMatchPost';
 const window = RN.Dimensions.get("window");
@@ -12,6 +13,7 @@ const height = window.height;
 const statusBarHeight = Constants.statusBarHeight;
 import Loading from '../Components/Loading';
 import Firebase from "../Config/Firebase";
+import * as firebase from "firebase";
 require('firebase/firestore');
 
 
@@ -106,11 +108,12 @@ export default class ListMatches extends React.Component{
         applications:[],
         loaded:false,
         refresh:false,
-        showMatches:true,
+        show:"Matches",
     }
     componentWillMount(){
         this.isTeamLeader();
         this.getList();
+        this.getMyApplications();
     }
     async getList(){
         let that = this;
@@ -162,16 +165,17 @@ export default class ListMatches extends React.Component{
             })
         }).then(() => that.setState({applications:applications, loaded:true}));
     }
-    changeView(){
-        this.setState({showMatches:!this.state.showMatches});
-    }
-
+    
     render(){
-        let {matches} = this.state;
+        let {matches, applications} = this.state;
         return(
             <RN.View style={styles.ListMatchesView}>
                 <Header title="Matches" plus={this.state.isLeader} plusOnPress={()=>{ this.setState({modalVisible:true})}} 
                         drawer={true} navigation={this.props.navigation}/>
+                <RN.View style={{height:height*0.05,flexDirection:"row",marginTop:10,marginBottom:10}}>
+                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Applicable" onPress={()=>this.setState({show:"Matches"})} />
+                    <Button containerStyle={{width:"35%",padding:0,height:"100%",margin:10}} title="Applied" onPress={()=>this.setState({show:"Applied"})} />
+                </RN.View>
                 <RNE.Overlay
                     isVisible={this.state.modalVisible} 
                     windowBackgroundColor="rgba(255, 255, 255, .8)"
@@ -183,11 +187,11 @@ export default class ListMatches extends React.Component{
                         <CreateMatchPost that={this}/>
                 </RNE.Overlay>
                 {this.state.loaded ? 
-                    !this.state.showMatches ?
+                    (this.state.show != "Matches") ?
                     <RN.FlatList
                         refreshing={this.state.refresh}
                         onRefresh={async ()=>{await this.setState({refresh:true}); await this.getMyApplications();}}
-                        data={matches}
+                        data={applications}
                         renderItem={(item) =>  <Application application={item.item} navigation={this.props.navigation}/>}
                         keyExtractor={(item) => item.id}/> 
                     :<RN.FlatList
